@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
@@ -21,35 +22,28 @@ public class User {
     @Column(name = "id")
     private int userId;
 
-    @Size(min = 2, max = 50)
-    @NotEmpty
-    @Column(name = "firstname",length = 50,nullable = false)
+    @NotBlank
+    @Column(name = "firstname")
     private String firstName;
 
-    @Size(min = 2, max = 50)
-    @NotEmpty
-    @Column(name = "lastname",length = 50,nullable = false)
+    @NotBlank
+    @Column(name = "lastname")
     private String lastName;
 
-    @Size(min = 2, max = 50)
-    @NotEmpty
-    @Column(name = "username", length = 50,nullable = false)
+    @NotBlank
+    @Column(name = "username")
     private String userName;
 
-
-    @Size(min = 6, max = 50)
-    @NotEmpty
+    @NotBlank
     @Email
-    @Column(name = "email",unique = true,nullable = false)
+    @Column(name = "email")
     private String email;
 
-    @Size(min = 8, max = 50)
     @NotEmpty
-    @Column(name = "password",nullable = false)
+    @Column(name = "password")
     private String password;
 
     @Column(name = "balance")
-
     private double balance;
 
     @Override
