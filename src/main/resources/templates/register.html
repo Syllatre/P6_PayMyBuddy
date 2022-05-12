@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="https://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>FormUsers</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+    <form id="contact" method="post" th:action="@{save}" th:object="${userForm}">
+        <h3>PayMyBuddy Formulaire d'inscription</h3>
+        <h4>Creez votre compte</h4>
+        <fieldset>
+            <input placeholder="Votre prénom" type="text" autofocus name="firstName" th:value="${firstName}">
+            <span th:errors="${firstName}"></span>
+        </fieldset>
+        <fieldset>
+            <input placeholder="Votre nom" type="text" name="lastName" th:value="${lastName}">
+            <span th:errors="${lastName}"></span>
+        </fieldset>
+        <fieldset>
+            <input placeholder="Votre nom d'utilisateur" type="text"  name="userName" th:value="${userName}">
+            <span th:errors="${userName}"></span>
+        </fieldset>
+        <fieldset>
+            <input placeholder="Your Email Address" type="email" name="email" th:value="${email}">
+            <span th:errors="${email}"></span>
+        </fieldset>
+        <fieldset>
+            <input placeholder="Votre mot de passe" type="password" name="password" th:value="${password}">
+            <span th:errors="${password}"></span>
+        </fieldset>
+        <fieldset>
+            <button name="submit" type="submit" id="contact-submit" data-submit="...Sending">Valider</button>
+        </fieldset>
+    </form>
+</div>
+</body>
+</html>

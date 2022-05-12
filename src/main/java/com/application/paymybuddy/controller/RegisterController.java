@@ -23,7 +23,7 @@ public class RegisterController {
 
     private UserService userService;
 
-    public ModelMapper modelMapper;
+    private ModelMapper modelMapper;
 
     @GetMapping("/register")
     public String register(Model model){
