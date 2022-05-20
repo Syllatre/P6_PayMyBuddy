@@ -1,38 +1,43 @@
 <!DOCTYPE html>
-<html lang="fr" xmlns:th="https://thymeleaf.org">
+<html lang="en" xmlns:th="https://thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>FormUsers</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 <div class="container">
     <form id="contact" method="post" th:action="@{save}" th:object="${userForm}">
         <h3>PayMyBuddy Formulaire d'inscription</h3>
         <h4>Creez votre compte</h4>
-        <fieldset>
-            <input placeholder="Votre prénom" type="text" autofocus name="firstName" th:value="${firstName}">
-            <span th:errors="${firstName}"></span>
-        </fieldset>
-        <fieldset>
-            <input placeholder="Votre nom" type="text" name="lastName" th:value="${lastName}">
-            <span th:errors="${lastName}"></span>
-        </fieldset>
-        <fieldset>
-            <input placeholder="Votre nom d'utilisateur" type="text"  name="userName" th:value="${userName}">
-            <span th:errors="${userName}"></span>
-        </fieldset>
-        <fieldset>
-            <input placeholder="Your Email Address" type="email" name="email" th:value="${email}">
-            <span th:errors="${email}"></span>
-        </fieldset>
-        <fieldset>
-            <input placeholder="Votre mot de passe" type="password" name="password" th:value="${password}">
-            <span th:errors="${password}"></span>
-        </fieldset>
-        <fieldset>
+        <div class="form-group">
+            <input placeholder="Votre prénom" type="text" autofocus name="firstName" th:field="*{firstName}">
+            <span class="has-error" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></span>
+        </div>
+        <div class="form-group">
+            <input placeholder="Votre nom" type="text" name="lastName" th:field="*{lastName}">
+            <span class="has-error" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></span>
+        </div>
+        <div class="form-group">
+            <input placeholder="Votre nom d'utilisateur" type="text"  name="userName" th:field="*{userName}">
+            <span class="has-error" th:if="${#fields.hasErrors('userName')}" th:errors="*{username}"></span>
+        </div>
+        <div class="form-group">
+            <input placeholder="Your Email Address" type="email" name="email" th:field="*{email}">
+            <span class="has-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+        </div>
+        <div class="form-group">
+            <input placeholder="Votre mot de passe" type="password" name="password" th:field="*{password}">
+            <span class="has-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+        </div>
+        <div class="form-group">
             <button name="submit" type="submit" id="contact-submit" data-submit="...Sending">Valider</button>
-        </fieldset>
+        </div>
     </form>
 </div>
 </body>

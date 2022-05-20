@@ -43,6 +43,13 @@ body {
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
 }
 
+#contact-login {
+  background: #F9F9F9;
+  padding: 25px;
+  margin: 150px 0;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+}
+
 #contact h3 {
   display: block;
   font-size: 30px;
@@ -57,7 +64,7 @@ body {
   font-weight: 400;
 }
 
-fieldset {
+form-group {
   border: medium none !important;
   margin: 0 0 10px;
   min-width: 100%;
@@ -114,15 +121,6 @@ fieldset {
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
-.copyright {
-  text-align: center;
-}
-
-#contact input:focus,
-#contact textarea:focus {
-  outline: 0;
-  border: 1px solid #aaa;
-}
 
 ::-webkit-input-placeholder {
   color: #888;
@@ -139,3 +137,32 @@ fieldset {
 :-ms-input-placeholder {
   color: #888;
 }
+
+.has-error {
+    color: red
+}
+
+.red{
+height: 600px
+background-color: red;}
+
+.container-index {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  width: auto;
+}
+.container-index h1{
+  font-weight: 800;
+  font-size: 60px;
+  color: black;
+}
+
+.image-logo{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+}
+
