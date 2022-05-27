@@ -26,13 +26,12 @@ public class RegisterController {
     private ModelMapper modelMapper;
 
     @GetMapping("/register")
-    public String register(Model model){
-        model.addAttribute("userForm",new UserFormDTO());
+    public String register(@ModelAttribute("userForm") UserFormDTO userFormDTO){
         return "register";
     }
 
-    @PostMapping("/save")
-    public String addUser(@Valid @ModelAttribute("userForm") UserFormDTO userFormDTO, BindingResult bindingResult, Model model) {
+    @PostMapping("/register")
+    public String addUser(@Valid @ModelAttribute("userForm") UserFormDTO userFormDTO, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {return "register";}
         log.debug("Creating user {}", userFormDTO);
         if (!userService.findByEmail(userFormDTO.getEmail()).isEmpty()) {

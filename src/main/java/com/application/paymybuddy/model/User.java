@@ -8,10 +8,9 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
@@ -25,40 +24,40 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id",nullable = false)
+    @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    @NotBlank
-    @Column(name = "firstname",nullable = false,length = 50)
+    @NotEmpty
+    @Column(name = "firstname", nullable = false, length = 50)
     private String firstName;
 
-    @NotBlank
-    @Column(name = "lastname",nullable = false,length = 50)
+    @NotEmpty
+    @Column(name = "lastname", nullable = false, length = 50)
     private String lastName;
 
-    @NotBlank
-    @Column(name = "username",nullable = false,length = 50)
+    @NotEmpty
+    @Column(name = "username", nullable = false, length = 50)
     private String userName;
 
-    @NotBlank
+    @NotEmpty
     @Email
-    @Column(name = "email",unique = true,nullable = false)
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
 
     @NotEmpty
-    @Column(name = "password",nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
-
-    @Column(name = "balance",nullable = false)
+    @NotNull
+    @Column(name = "balance", nullable = false)
     private BigDecimal balance;
 
     //utilisation de joinTable, https://qastack.fr/programming/5478328/in-which-case-do-you-use-the-jpa-jointable-annotation
     @ManyToMany
     @JoinTable(name = "user_connection",
-    joinColumns = @JoinColumn(name ="user_id",
-            referencedColumnName = "user_id"),
+            joinColumns = @JoinColumn(name = "user_id",
+                    referencedColumnName = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "connection_id",
-            referencedColumnName = "user_id"))
+                    referencedColumnName = "user_id"))
     private Set<User> connections;
 
     @OneToMany(mappedBy = "user")

@@ -1,39 +1,31 @@
 package com.application.paymybuddy.model.DTO;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-import javax.persistence.Column;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import java.io.Serializable;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserFormDTO {
+public class UserFormDTO implements Serializable {
 
-    @NotBlank
-    @Column(name = "firstname")
+    @NotEmpty
     private String firstName;
 
-    @NotBlank
-    @Column(name = "lastname")
+    @NotEmpty
     private String lastName;
 
-    @NotBlank
-    @Column(name = "username")
+    @NotEmpty
     private String userName;
 
-    @NotBlank
+    @NotEmpty
     @Email
-    @Column(name = "email")
     private String email;
 
     @NotEmpty
-    @Column(name = "password")
     private String password;
 }

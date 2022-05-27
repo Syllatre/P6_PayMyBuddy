@@ -121,7 +121,6 @@ form-group {
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
-
 ::-webkit-input-placeholder {
   color: #888;
 }
@@ -165,4 +164,73 @@ background-color: red;}
   justify-content: center;
   height: 300px;
 }
+
+.container-header-transaction{
+  display: flex;
+  justify-content:space-between;
+  width: 800px;
+  margin-top:30px;
+}
+
+
+.header-transaction{
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  margin:50px;
+  height: 200px;
+  border-radius:10px;
+  border: 2px solid #888;
+  box-shadow: 3px 3px 15px black;
+  background: white;
+  position: relative;
+}
+
+.header-transaction h5{
+  color:#777;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+
+}
+.solde{
+  position:absolute;
+  top: 70px;
+  right: 40px;
+  color:black
+}
+
+.body-transaction{
+  display:flex;
+  justify-content: center;
+  align-items: flex-start;
+  margin:50px;
+  height: 500px;
+  border-radius:10px;
+  border: 2px solid #888;
+  box-shadow: 3px 3px 15px black;
+  background: white;
+  position: relative;
+}
+
+.body-transaction h5{
+  color:#777;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+
+}
+.table{
+  margin :80px;
+}
+
+.container-login{
+display: flex;
+background:red;
+
+}
+
 

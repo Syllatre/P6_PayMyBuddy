@@ -49,7 +49,7 @@ public class LoginController {
             return "login";
         }
 
-        if(userData.getEmail().equalsIgnoreCase(loginDTO.getEmail()) && userData.getPassword().equalsIgnoreCase(loginDTO.getPassword())){
+        if(userData.getEmail().equalsIgnoreCase(loginDTO.getEmail()) && userData.getPassword().equals(loginDTO.getPassword())){
             return "redirect:/home";
         }
         else{

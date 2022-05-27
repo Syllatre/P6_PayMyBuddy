@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>userTransactions</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<!--navigateur-->
+<nav class="navbar navbar-expand-lg bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">PayMyBuddy</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Transfer</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contact</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Login</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="solde"><h5>Votre Solde est de 25€</h5></div>
+<!--<div class="header-transaction">-->
+<!--    <h5>Envoyer de l'argent</h5>-->
+<!--    <div class="container-header-transaction">-->
+<!--        <div class="amount">-->
+<!--            <input th:field="*{amount}" type="number" step="0.01" class="form-control" placeholder="Entrez le montant" autofocus="true">-->
+<!--            <span class="has-error" th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}"></span>-->
+<!--        </div>-->
+<!--        <div class="connection">-->
+<!--            <select th:field="*{userDestinationId}" class="form-control">-->
+<!--                <option value="0">-&#45;&#45; Choisissez le destinataire -&#45;&#45;</option>-->
+<!--                <option-->
+<!--                        th:each="entry : ${user.getConnections()}"-->
+<!--                        th:value="${entry.getId}"-->
+<!--                        th:text="${entry.getEmail()}">-->
+<!--                </option>-->
+<!--            </select>-->
+<!--            <span class="has-error" th:if="${#fields.hasErrors('userDestinationId')}" th:errors="*{userDestinationId}"></span>-->
+<!--        </div>-->
+<!--        <div class="comment">-->
+<!--            <input th:field="*{comment}" type="text" class="form-control" placeholder="Objet du virement">-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    <div class="button-pay">-->
+<!--        <button class="btn btn-lg btn-success btn-block" type="submit">Pay</button>-->
+<!--    </div>-->
+<!--</div>-->
+<div class="body-transaction">
+    <h5>Historique des transactions</h5>
+    <table class="table">
+        <thead class="thead-light">
+        <tr>
+            <th class="text-left">Expéditeur</th>
+            <th class="text-left">Destinataire</th>
+            <th class="text-left">Date</th>
+            <th class="text-left">montant</th>
+            <th class="text-left">Commission</th>
+            <th class="text-left">Commentaire</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="transaction:${userTransactions}">
+            <td th:text="${transaction.userSource.email}"></td>
+            <td th:text="${transaction.userDestination.email}"></td>
+            <td th:text="${transaction.dateUserTransaction}"></td>
+            <td th:text="${transaction.amount}"></td>
+            <td th:text="${transaction.fees}"></td>
+            <td th:text="${transaction.comments}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <nav aria-label="Page navigation" class="paging">
+        <ul class="pagination" th:if="${userTransactions.page.totalPages > 1}">
+            <li class="page-item" th:classappend="${!userTransactions.paging.isPrevEnabled()? 'disabled' : ''}">
+                <a class="page-link" th:href="@{'/?pageNumber=' + ${userTransactions.paging.pageNumber - 1}}"
+                   tabindex="-1">Previous</a>
+            </li>
+            <th:block th:each="item : ${userTransactions.paging.getItems()}">
+                <li class="page-item" th:classappend="${item.index == userTransactions.paging.pageNumber? 'active' : ''}"
+                    th:if="${item.pageItemType.name() == 'PAGE'}">
+                    <a class="page-link" th:href="@{'/?pageNumber=' + ${item.index}}"
+                       th:text="${item.index}"></a>
+                </li>
+                <li class="page-item disabled" th:if="${item.pageItemType.name() == 'DOTS'}">
+                    <a class="page-link" href="#">...</a>
+                </li>
+            </th:block>
+            <li class="page-item" th:classappend="${!userTransactions.paging.isNextEnabled()? 'disabled' : ''}">
+                <a class="page-link" th:href="@{'/?pageNumber=' + ${userTransactions.paging.pageNumber + 1}}">Next</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</body>
+</html>
