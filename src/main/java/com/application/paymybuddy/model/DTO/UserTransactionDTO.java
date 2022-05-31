@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 public class UserTransactionDTO implements Serializable {
 
     @NotBlank
-    private Long userDestination;
+    private Long userDestinationId;
 
     @NotNull
     private BigDecimal amount;

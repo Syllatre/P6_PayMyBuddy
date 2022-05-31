@@ -7,6 +7,7 @@ import com.application.paymybuddy.repository.UserTransactionRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -18,9 +19,14 @@ public class UserTransactionService {
 
     private UserTransactionRepository userTransactionRepository;
 
-    public Paged<UserTransaction> getPage(int pageNumber, int size){
-        PageRequest request = PageRequest.of(pageNumber - 1,size, Sort.by(Sort.Direction.ASC, "user_transaction_id"));
-        Page<UserTransaction> userTransactionPage = userTransactionRepository.findAll(request);
-        return new Paged<>(userTransactionPage, Paging.of(userTransactionPage.getTotalPages(),pageNumber,size));
+    public List<UserTransaction> getAllUserTransactions(){
+        return userTransactionRepository.findAll();
+    }
+
+    public Page<UserTransaction> findPaginated(int pageNumber,int size, String sortField, String sortDirection){
+        Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() :
+                Sort.by(sortField).descending();
+        Pageable pageable = PageRequest.of(pageNumber -1,size, sort);
+        return userTransactionRepository.findAll(pageable);
     }
 }

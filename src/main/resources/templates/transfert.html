@@ -41,39 +41,35 @@
     </div>
 </nav>
 <div class="solde"><h5>Votre Solde est de 25€</h5></div>
-<!--<div class="header-transaction">-->
-<!--    <h5>Envoyer de l'argent</h5>-->
-<!--    <div class="container-header-transaction">-->
-<!--        <div class="amount">-->
-<!--            <input th:field="*{amount}" type="number" step="0.01" class="form-control" placeholder="Entrez le montant" autofocus="true">-->
-<!--            <span class="has-error" th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}"></span>-->
-<!--        </div>-->
-<!--        <div class="connection">-->
-<!--            <select th:field="*{userDestinationId}" class="form-control">-->
-<!--                <option value="0">-&#45;&#45; Choisissez le destinataire -&#45;&#45;</option>-->
-<!--                <option-->
-<!--                        th:each="entry : ${user.getConnections()}"-->
-<!--                        th:value="${entry.getId}"-->
-<!--                        th:text="${entry.getEmail()}">-->
-<!--                </option>-->
-<!--            </select>-->
-<!--            <span class="has-error" th:if="${#fields.hasErrors('userDestinationId')}" th:errors="*{userDestinationId}"></span>-->
-<!--        </div>-->
-<!--        <div class="comment">-->
-<!--            <input th:field="*{comment}" type="text" class="form-control" placeholder="Objet du virement">-->
-<!--        </div>-->
-<!--    </div>-->
-<!--    <div class="button-pay">-->
-<!--        <button class="btn btn-lg btn-success btn-block" type="submit">Pay</button>-->
-<!--    </div>-->
-<!--</div>-->
+<div class="header-transaction">
+    <h5>Envoyer de l'argent</h5>
+    <div class="container-header-transaction">
+        <div class="amount">
+            <input  type="number" step="0.01" class="form-control" placeholder="Entrez le montant" autofocus="true">
+        </div>
+        <div class="connection">
+            <select  class="form-control">
+                <option value="0">--- Choisissez le destinataire ---</option>
+            </select>
+        </div>
+        <div class="comment">
+            <input  type="text" class="form-control" placeholder="Objet du virement">
+        </div>
+    </div>
+    <div class="button-pay">
+        <button class="btn btn-lg btn-success btn-block" type="submit">Pay</button>
+    </div>
+</div>
 <div class="body-transaction">
     <h5>Historique des transactions</h5>
     <table class="table">
         <thead class="thead-light">
         <tr>
             <th class="text-left">Expéditeur</th>
-            <th class="text-left">Destinataire</th>
+            <th class="text-left">
+                <a th:href="@{'transfert/page/' + ${currentPage} + '?sortField=userDestination&sortDir=' + ${reverseSortDir}}">
+                Destinataire</a>
+            </th>
             <th class="text-left">Date</th>
             <th class="text-left">montant</th>
             <th class="text-left">Commission</th>
@@ -81,7 +77,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="transaction:${userTransactions}">
+        <tr th:each="transaction:${transactionList}">
             <td th:text="${transaction.userSource.email}"></td>
             <td th:text="${transaction.userDestination.email}"></td>
             <td th:text="${transaction.dateUserTransaction}"></td>
@@ -91,27 +87,28 @@
         </tr>
         </tbody>
     </table>
-    <nav aria-label="Page navigation" class="paging">
-        <ul class="pagination" th:if="${userTransactions.page.totalPages > 1}">
-            <li class="page-item" th:classappend="${!userTransactions.paging.isPrevEnabled()? 'disabled' : ''}">
-                <a class="page-link" th:href="@{'/?pageNumber=' + ${userTransactions.paging.pageNumber - 1}}"
-                   tabindex="-1">Previous</a>
-            </li>
-            <th:block th:each="item : ${userTransactions.paging.getItems()}">
-                <li class="page-item" th:classappend="${item.index == userTransactions.paging.pageNumber? 'active' : ''}"
-                    th:if="${item.pageItemType.name() == 'PAGE'}">
-                    <a class="page-link" th:href="@{'/?pageNumber=' + ${item.index}}"
-                       th:text="${item.index}"></a>
-                </li>
-                <li class="page-item disabled" th:if="${item.pageItemType.name() == 'DOTS'}">
-                    <a class="page-link" href="#">...</a>
-                </li>
-            </th:block>
-            <li class="page-item" th:classappend="${!userTransactions.paging.isNextEnabled()? 'disabled' : ''}">
-                <a class="page-link" th:href="@{'/?pageNumber=' + ${userTransactions.paging.pageNumber + 1}}">Next</a>
-            </li>
-        </ul>
-    </nav>
+    <div th:if = "${totalPages > 1}">
+        <div class = "pages">
+            <div class = "totalItems">
+                Total Rows: [[${totalItems}]]
+            </div>
+            <div class = "page-main">
+					<span th:each="i: ${#numbers.sequence(1, totalPages)}">
+						<a th:if="${currentPage != i}" th:href="@{'transfert/page/' + ${i}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
+						<span th:unless="${currentPage != i}">[[${i}]]</span>  &nbsp; &nbsp;
+					</span>
+            </div>
+            <div class = "page-next">
+                <a th:if="${currentPage < totalPages}" th:href="@{'transfert/page/' + ${currentPage + 1}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Next</a>
+                <span th:unless="${currentPage < totalPages}">Next</span>
+            </div>
+
+            <div class="page-last">
+                <a th:if="${currentPage < totalPages}" th:href="@{'/page/' + ${totalPages}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Last</a>
+                <span th:unless="${currentPage < totalPages}">Last</span>
+            </div>
+        </div>
+    </div>
 </div>
 <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
 <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>

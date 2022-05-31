@@ -10,6 +10,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Set;
 
@@ -60,8 +61,8 @@ public class User {
                     referencedColumnName = "user_id"))
     private Set<User> connections;
 
-    @OneToMany(mappedBy = "user")
-    private Set<BankTransaction> bankTransactions;
+//    @OneToMany(mappedBy = "user")
+//    private Set<BankTransaction> bankTransactions;
 
     @OneToMany(mappedBy = "userSource")
     private Set<UserTransaction> userTransactions;
