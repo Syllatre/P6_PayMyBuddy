@@ -17,15 +17,16 @@ import java.util.List;
 @Controller
 public class TransfertController {
 
-    private TransfertRepository transfertRepository;
+    private TransfertService transfertService;
 
     @GetMapping("/transfert")
     public String findPaginated (Model model,
-                                 @RequestParam(name = "page",defaultValue ="0" ) int page,
-                                 @RequestParam(name = "size",defaultValue = "5") int size) {
-    Page<UserTransaction> transfert = transfertRepository.findAll(PageRequest.of(page,size));
-    model.addAttribute("transfert",transfert.getContent());
-    model.addAttribute("pages",new int[transfert.getTotalPages()]);
+                                 @RequestParam(name = "page",defaultValue ="1" ) int page) {
+        int size = 5;
+    Page<UserTransaction> pageTransfert = transfertService.findPaginated(page,size);
+    List<UserTransaction> transfert = pageTransfert.getContent();
+    model.addAttribute("transfert",transfert);
+    model.addAttribute("pages",new int[pageTransfert.getTotalPages()]);
     model.addAttribute("currentPage",page);
         return "transfert";
     }

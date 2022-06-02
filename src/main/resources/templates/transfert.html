@@ -63,9 +63,9 @@
             </table>
             <ul class="nav nav-pills">
                 <li th:each="page,status:${pages}">
-                    <a th:class="${status.index==currentPage?'btn btn-secondary ms-1':'btn btn-outline- ms-1'}"
-                       th:text="${status.index}"
-                    th:href="@{transfert(page=${status.index})}"></a>
+                    <a th:class="${status.count==currentPage?'btn btn-secondary ms-1':'btn btn-outline- ms-1'}"
+                       th:text="${status.count}"
+                    th:href="@{transfert(page=${status.count})}"></a>
                 </li>
             </ul>
         </div>

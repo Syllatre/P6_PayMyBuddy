@@ -18,4 +18,8 @@ public class TransfertService {
 
     private TransfertRepository transfertRepository;
 
+    public Page<UserTransaction> findPaginated(int page, int size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        return transfertRepository.findAll(pageable);
+    }
 }
