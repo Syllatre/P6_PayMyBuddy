@@ -2,13 +2,8 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>userTransactions</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
-          rel="stylesheet"
-          integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
-          crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
+    <title>Transfert</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/5.1.3/css/bootstrap.min.css">
 </head>
 <body>
 <!--navigateur-->
@@ -40,78 +35,41 @@
         </div>
     </div>
 </nav>
-<div class="solde"><h5>Votre Solde est de 25€</h5></div>
-<div class="header-transaction">
-    <h5>Envoyer de l'argent</h5>
-    <div class="container-header-transaction">
-        <div class="amount">
-            <input  type="number" step="0.01" class="form-control" placeholder="Entrez le montant" autofocus="true">
-        </div>
-        <div class="connection">
-            <select  class="form-control">
-                <option value="0">--- Choisissez le destinataire ---</option>
-            </select>
-        </div>
-        <div class="comment">
-            <input  type="text" class="form-control" placeholder="Objet du virement">
-        </div>
-    </div>
-    <div class="button-pay">
-        <button class="btn btn-lg btn-success btn-block" type="submit">Pay</button>
-    </div>
-</div>
-<div class="body-transaction">
-    <h5>Historique des transactions</h5>
-    <table class="table">
-        <thead class="thead-light">
-        <tr>
-            <th class="text-left">Expéditeur</th>
-            <th class="text-left">
-                <a th:href="@{'transfert/page/' + ${currentPage} + '?sortField=userDestination&sortDir=' + ${reverseSortDir}}">
-                Destinataire</a>
-            </th>
-            <th class="text-left">Date</th>
-            <th class="text-left">montant</th>
-            <th class="text-left">Commission</th>
-            <th class="text-left">Commentaire</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="transaction:${transactionList}">
-            <td th:text="${transaction.userSource.email}"></td>
-            <td th:text="${transaction.userDestination.email}"></td>
-            <td th:text="${transaction.dateUserTransaction}"></td>
-            <td th:text="${transaction.amount}"></td>
-            <td th:text="${transaction.fees}"></td>
-            <td th:text="${transaction.comments}"></td>
-        </tr>
-        </tbody>
-    </table>
-    <div th:if = "${totalPages > 1}">
-        <div class = "pages">
-            <div class = "totalItems">
-                Total Rows: [[${totalItems}]]
-            </div>
-            <div class = "page-main">
-					<span th:each="i: ${#numbers.sequence(1, totalPages)}">
-						<a th:if="${currentPage != i}" th:href="@{'transfert/page/' + ${i}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
-						<span th:unless="${currentPage != i}">[[${i}]]</span>  &nbsp; &nbsp;
-					</span>
-            </div>
-            <div class = "page-next">
-                <a th:if="${currentPage < totalPages}" th:href="@{'transfert/page/' + ${currentPage + 1}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Next</a>
-                <span th:unless="${currentPage < totalPages}">Next</span>
-            </div>
-
-            <div class="page-last">
-                <a th:if="${currentPage < totalPages}" th:href="@{'/page/' + ${totalPages}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Last</a>
-                <span th:unless="${currentPage < totalPages}">Last</span>
-            </div>
+<div class="container mt-2">
+    <div class="card">
+        <div class="card-header">Historique des Transferts</div>
+        <div class="card-body">
+            <table class="table table-striped table-responsive-md">
+                <thead>
+                <tr>
+                    <th>Expéditeur</th>
+                    <th>Destinataire</th>
+                    <th>Date</th>
+                    <th>Montant</th>
+                    <th>Commission</th>
+                    <th>Commentaire</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="transaction:${transfert}">
+                    <td th:text="${transaction.userSource.email}"></td>
+                    <td th:text="${transaction.userDestination.email}"></td>
+                    <td th:text="${transaction.dateUserTransaction}"></td>
+                    <td th:text="${transaction.amount}"></td>
+                    <td th:text="${transaction.fees}"></td>
+                    <td th:text="${transaction.comments}"></td>
+                </tr>
+                </tbody>
+            </table>
+            <ul class="nav nav-pills">
+                <li th:each="page,status:${pages}">
+                    <a th:class="${status.index==currentPage?'btn btn-secondary ms-1':'btn btn-outline- ms-1'}"
+                       th:text="${status.index}"
+                    th:href="@{transfert(page=${status.index})}"></a>
+                </li>
+            </ul>
         </div>
     </div>
 </div>
-<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
-<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
-<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 </body>
 </html>

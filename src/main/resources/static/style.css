@@ -206,6 +206,7 @@ background-color: red;}
   display:flex;
   justify-content: center;
   align-items: flex-start;
+  flex-direction:column;
   margin:50px;
   height: 500px;
   border-radius:10px;
@@ -221,7 +222,6 @@ background-color: red;}
   top: 10px;
   left: 10px;
   display: flex;
-
 }
 .table{
   margin :80px;
@@ -230,7 +230,9 @@ background-color: red;}
 .container-login{
 display: flex;
 background:red;
-
+width: 400px
 }
+.pages{background: yellow}
+
 
 
