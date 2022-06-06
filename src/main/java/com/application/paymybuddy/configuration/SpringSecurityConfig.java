@@ -20,15 +20,11 @@
 //    private DataSource dataSource;
 //
 //    @Override
-//    protected void configure(AuthenticationManagerBuilder authen) throws Exception{
-//        authen.jdbcAuthentication()
+//    protected void configure(AuthenticationManagerBuilder auth) throws Exception{
+//        auth.jdbcAuthentication()
 //                .dataSource(dataSource);
 //    }
-////        authen.inMemoryAuthentication()
-////                .withUser("springuser").password(passwordEncoder().encode("spring123")).roles("USER")
-////                .and()
-////                .withUser("root").password(passwordEncoder().encode("rootroot")).roles("ADMIN","USER");
-////    }
+//
 //    @Override
 //    public void configure(HttpSecurity http) throws Exception{
 //        http.authorizeHttpRequests()

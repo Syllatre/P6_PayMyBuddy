@@ -1,5 +1,6 @@
 package com.application.paymybuddy.service;
 
+import com.application.paymybuddy.model.User;
 import com.application.paymybuddy.model.UserTransaction;
 import com.application.paymybuddy.repository.TransfertRepository;
 import lombok.AllArgsConstructor;

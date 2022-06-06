@@ -1,75 +1,97 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://.ultrap.net.nz/thymeleaf/layout"
+      layout:decorate="template1">
 <head>
     <meta charset="UTF-8">
     <title>Transfert</title>
     <link rel="stylesheet" href="/webjars/bootstrap/5.1.3/css/bootstrap.min.css">
 </head>
 <body>
-<!--navigateur-->
-<nav class="navbar navbar-expand-lg bg-light">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">PayMyBuddy</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Transfer</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Profile</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Contact</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Login</a>
-                </li>
-            </ul>
+<div layout:fragment="content1">
+    <div class="container p-5 my-5  mt-2 border border-2 rounded">
+        <div class="position-relative">
+            <div class=" col mb-4" th:text="'Solde: '+ ${user.balance}+ ' €'"></div>
+            <div class="position-absolute top-0 end-0" >
+                <a class="btn btn-primary" href="/connection" role="button">Ajouter un bénéficiaire</a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">Réaliser un virement</div>
+            <div class="card-body">
+                <form method="POST" th:object="${userTransactionDTO}"
+                      th:action="@{/transfert}">
+                    <div class="row">
+                        <div class="col">
+                            <select th:field="*{userDestinationId}" class="form-control justify-content-centerform-signin-heading">
+                                <option value="0"> Sélectionner le bénéficiaire</option>
+                                <option
+                                        th:each="entry : ${user.getConnections()}"
+                                        th:value="${entry.getUserId}"
+                                        th:text="${entry.getUserName}">
+                                </option>
+                            </select>
+                            <span class="has-error" th:if="${#fields.hasErrors('userDestinationId')}"
+                                  th:errors="*{userDestinationId}">
+					        </span>
+                        </div>
+                        <div class="col">
+                            <input th:field="*{amount}" type="number" step="0.10"
+                                   class="form-control" placeholder="Sectionnez le montant"
+                                   autofocus="true">
+                            <span class="has-error" th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}"></span>
+                        </div>
+                        <div class="col">
+                            <input th:field="*{comment}"  type="text" class="form-control"  placeholder="Objet du virement">
+                            <span class="has-error" th:if="${#fields.hasErrors('comment')}" th:errors="*{comment}"></span>
+                        </div>
+                        <div class="col sm-4">
+                            <button class="btn btn-success" type="submit">Valider</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</nav>
-<div class="container mt-2">
-    <div class="card">
-        <div class="card-header">Historique des Transferts</div>
-        <div class="card-body">
-            <table class="table table-striped table-responsive-md">
-                <thead>
-                <tr>
-                    <th>Expéditeur</th>
-                    <th>Destinataire</th>
-                    <th>Date</th>
-                    <th>Montant</th>
-                    <th>Commission</th>
-                    <th>Commentaire</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="transaction:${transfert}">
-                    <td th:text="${transaction.userSource.email}"></td>
-                    <td th:text="${transaction.userDestination.email}"></td>
-                    <td th:text="${transaction.dateUserTransaction}"></td>
-                    <td th:text="${transaction.amount}"></td>
-                    <td th:text="${transaction.fees}"></td>
-                    <td th:text="${transaction.comments}"></td>
-                </tr>
-                </tbody>
-            </table>
-            <ul class="nav nav-pills">
-                <li th:each="page,status:${pages}">
-                    <a th:class="${status.count==currentPage?'btn btn-secondary ms-1':'btn btn-outline- ms-1'}"
-                       th:text="${status.count}"
-                    th:href="@{transfert(page=${status.count})}"></a>
-                </li>
-            </ul>
+    <div class="container mt-2">
+        <div class="card">
+            <div class="card-header">Historique des Transferts</div>
+            <div class="card-body">
+                <table class="table table-striped table-responsive-md">
+                    <thead>
+                    <tr>
+                        <th>Expéditeur</th>
+                        <th>Destinataire</th>
+                        <th>Date</th>
+                        <th>Montant</th>
+                        <th>Commission</th>
+                        <th>Commentaire</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="transaction:${transfert}">
+                        <td th:text="${transaction.userSource.email}"></td>
+                        <td th:text="${transaction.userDestination.email}"></td>
+                        <td th:text="${transaction.dateUserTransaction}"></td>
+                        <td th:text="${transaction.amount}"></td>
+                        <td th:text="${transaction.fees}"></td>
+                        <td th:text="${transaction.comments}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <ul class="nav nav-pills">
+                    <li th:each="page,status:${pages}">
+                        <a th:class="${status.count==currentPage?'btn btn-secondary ms-1':'btn btn-outline- ms-1'}"
+                           th:text="${status.count}"
+                           th:href="@{transfert(page=${status.count})}"></a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 </div>
+</div>
+
 </body>
 </html>

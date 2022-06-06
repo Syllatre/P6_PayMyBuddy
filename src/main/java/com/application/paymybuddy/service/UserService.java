@@ -6,7 +6,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 
 @AllArgsConstructor
@@ -23,7 +26,32 @@ public class UserService {
         return  userRepository.findByEmail(email);
     }
 
-    public User validLogin(String email, String password){
-        return userRepository.findByEmailAndPassword(email,password);
-    }
+   public Optional<User> findById(Long id){
+        return userRepository.findById(id);
+   }
+
+   public List<User> findAll(){
+        return userRepository.findAll();
+   }
+
+   public Set<User> UserListWithNoConnection(){
+        User user = userRepository.findById(2L).get();
+        List <User> allUser = userRepository.findAll();
+        Set<User> userConnection = user.getConnections();
+        Set<User> userWithNoConnection = new HashSet<>();
+       for(User allUsers : allUser){
+            for (User userConnections : userConnection){
+                if(userConnections.equals(allUsers)){
+                    allUser.remove(userConnections);
+                }
+            }
+        }
+       for(User allUserFilter: allUser){
+           userWithNoConnection.add(allUserFilter);
+       }
+        return userWithNoConnection;
+   }
+   public User save(User user){
+        return userRepository.save(user);
+   }
 }
