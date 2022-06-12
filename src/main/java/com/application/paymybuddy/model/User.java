@@ -10,7 +10,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Set;
 
@@ -67,4 +66,16 @@ public class User {
     @OneToMany(mappedBy = "userSource")
     private Set<UserTransaction> userTransactions;
 
+    @NotNull
+    @ManyToMany
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id",
+            referencedColumnName = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "roles_id",
+            referencedColumnName = "role_id"))
+    Set<Role> roles;
+
+    @NotNull
+    private Boolean active;
 }

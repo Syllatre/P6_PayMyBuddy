@@ -4,11 +4,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class HomeController {
-
-    @GetMapping("/")
-    public String home(){
-        return"home";
+public class SecurityController {
+    @GetMapping("/403")
+    public String notAuthorized(){
+        return "403";
     }
-
 }
