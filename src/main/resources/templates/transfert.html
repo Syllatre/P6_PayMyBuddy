@@ -14,14 +14,14 @@
         <div class="position-relative">
             <div class=" col mb-4" th:text="'Solde: '+ ${user.balance}+ ' €'"></div>
             <div class="position-absolute top-0 end-0" >
-                <a class="btn btn-primary" href="/connection" role="button">Ajouter un bénéficiaire</a>
+                <a class="btn btn-primary" href="/user/connection" role="button">Ajouter un bénéficiaire</a>
             </div>
         </div>
         <div class="card">
             <div class="card-header">Réaliser un virement</div>
             <div class="card-body">
                 <form method="POST" th:object="${userTransactionDTO}"
-                      th:action="@{/transfert}">
+                      th:action="@{/user/transfert}">
                     <div class="row">
                         <div class="col">
                             <select th:field="*{userDestinationId}" class="form-control justify-content-centerform-signin-heading">
@@ -84,7 +84,7 @@
                     <li th:each="page,status:${pages}">
                         <a th:class="${status.count==currentPage?'btn btn-secondary ms-1':'btn btn-outline- ms-1'}"
                            th:text="${status.count}"
-                           th:href="@{transfert(page=${status.count})}"></a>
+                           th:href="@{user/transfert(page=${status.count})}"></a>
                     </li>
                 </ul>
             </div>

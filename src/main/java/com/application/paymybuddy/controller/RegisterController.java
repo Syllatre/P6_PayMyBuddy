@@ -26,21 +26,25 @@ public class RegisterController {
     private ModelMapper modelMapper;
 
     @GetMapping("/register")
-    public String register(@ModelAttribute("userForm") UserFormDTO userFormDTO){
+    public String register(@ModelAttribute("userFormDTO") UserFormDTO userFormDTO){
         return "register";
     }
 
     @PostMapping("/register")
-    public String addUser(@Valid @ModelAttribute("userForm") UserFormDTO userFormDTO, BindingResult bindingResult) {
+    public String addUser(@Valid @ModelAttribute("userFormDTO") UserFormDTO userFormDTO, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {return "register";}
         log.debug("Creating user {}", userFormDTO);
-        if (!userService.findByEmail(userFormDTO.getEmail()).isEmpty()) {
+        if(userService.existsByEmail(userFormDTO.getEmail())) {
             bindingResult.rejectValue("email", "", "Cet email est deja existant");
+            return "register";
+        }
+        if(userService.existsByUserName(userFormDTO.getUserName())) {
+            bindingResult.rejectValue("userName", "", "Ce nom d'utilisateur est deja existant");
             return "register";
         }
         User user = convertToEntity(userFormDTO);
         userService.createUser(user);
-        return "redirect:/login";
+        return "redirect:/register?success";
     }
 
     private User convertToEntity(UserFormDTO userFormDTO) {

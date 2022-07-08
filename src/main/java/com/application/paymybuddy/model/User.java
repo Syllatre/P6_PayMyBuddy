@@ -11,6 +11,8 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.Date;
 import java.util.Set;
 
 @Entity
@@ -36,7 +38,7 @@ public class User {
     private String lastName;
 
     @NotEmpty
-    @Column(name = "username", nullable = false, length = 50)
+    @Column(name = "username", unique = true, nullable = false, length = 50)
     private String userName;
 
     @NotEmpty
@@ -67,7 +69,7 @@ public class User {
     private Set<UserTransaction> userTransactions;
 
     @NotNull
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id",
@@ -77,5 +79,17 @@ public class User {
     Set<Role> roles;
 
     @NotNull
-    private Boolean active;
+    private boolean active;
+
+    public User(String firstname, String lastname, String userName, String email, String password, BigDecimal balance, Set<Role> roles, boolean active) {
+        this.firstName = firstname;
+        this.lastName = lastname;
+        this.userName = userName;
+        this.email = email;
+        this.password = password;
+        this.balance = balance;
+        this.roles = roles;
+        this.active = active;
+    }
+
 }

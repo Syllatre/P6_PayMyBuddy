@@ -11,7 +11,10 @@
     <div class="row justify-content-center">
         <h2 class=" row justify-content-centerform-signin-heading">Creez votre compte</h2>
         <div class="col-md-5 col-lg-4">
-            <form id="contact" method="post" th:action="@{/register}" th:object="${userForm}">
+            <div th:if="${param.success}">
+                <div class="alert alert-info">Inscription réalisée avec success</div>
+            </div>
+            <form id="contact" method="post" th:action="@{/register}" th:object="${userFormDTO}">
 
                 <input class="form-control my-3 bg-light" placeholder="Prenom" type="text" autofocus name="firstName"
                        th:field="*{firstName}">

@@ -11,10 +11,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
-import java.util.AbstractSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -28,25 +30,24 @@ public class TransfertController {
 
     private UserService userService;
 
-    @GetMapping("/connection")
-    public String getConnection(Model model){
-    Set<User> userWithNoConnection = userService.UserListWithNoConnection();
-    model.addAttribute("userConnection",userWithNoConnection);
-    return "connection";
+    @GetMapping("/user/connection")
+    public String getConnection(Model model) {
+        Set<User> userWithNoConnection = userService.UserListWithNoConnection();
+        model.addAttribute("userConnection", userWithNoConnection);
+        return "/user/connection";
     }
 
-    @PostMapping("/connection")
+    @PostMapping("/user/connection")
     public String postConnection(@ModelAttribute("userConnection") Long userConnection,
                                  Model model,
-                                 BindingResult bindingResult){
+                                 BindingResult bindingResult) {
         User user = userService.findById(2L).get();
         Set<User> connection = new HashSet<>();
         connection.add(userService.findById(userConnection).get());
         user.setConnections(connection);
         userService.save(user);
-        return "connection";
+        return "user/connection";
     }
-
 
 
     @GetMapping("/transfert")

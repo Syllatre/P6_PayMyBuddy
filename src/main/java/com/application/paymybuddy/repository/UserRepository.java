@@ -7,15 +7,25 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    public Optional<User> findByEmail(String email);
 
     public User save(User user);
 
+    User findByEmail(String email);
 
-    public User findByEmailAndPassword(String email, String password);
+    @Query("SELECT CASE "
+            + "WHEN COUNT(u) > 0 THEN true"
+            + " ELSE false END "
+            + "FROM User u "
+            + "WHERE u.email = :email")
+    public Boolean existsByEmail(@Param("email") String email);
+
+    @Query("SELECT CASE "
+            + "WHEN COUNT(u) > 0 THEN true"
+            + " ELSE false END "
+            + "FROM User u "
+            + "WHERE u.userName = :userName")
+    public Boolean existsByUsername(@Param("userName") String userName);
 }
