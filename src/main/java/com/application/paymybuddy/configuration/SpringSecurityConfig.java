@@ -2,11 +2,17 @@ package com.application.paymybuddy.configuration;
 
 import com.application.paymybuddy.service.UserDetailsServiceImpl;
 import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.sql.DataSource;
 
@@ -15,29 +21,45 @@ import javax.sql.DataSource;
 @EnableWebSecurity
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private DataSource dataSource;
+    private UserDetailsService userDetailsService;
 
-    private UserDetailsServiceImpl userDetailsService;
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-
-//        auth.inMemoryAuthentication()
-//                .withUser("user").password(passwordEncoder.encode("1234")).roles("USER")
-//                .and()
-//                .withUser("admin").password(passwordEncoder.encode("1234")).roles("USER", "ADMIN");
-        auth.userDetailsService(userDetailsService);
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
     }
+
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http.formLogin();
-        http.authorizeHttpRequests().antMatchers("/").permitAll();
-        http.authorizeHttpRequests().antMatchers("/register").permitAll();
         http.authorizeHttpRequests().antMatchers("/admin/**").hasAuthority("ADMIN");
         http.authorizeHttpRequests().antMatchers("/user/**").hasAuthority("USER");
-        http.authorizeHttpRequests().antMatchers("/webjars/**").permitAll();
-        http.authorizeHttpRequests().anyRequest().authenticated();
+        http.authorizeHttpRequests().antMatchers("/","/login","/register**","/webjars/**","/img/**").permitAll()
+        .anyRequest().authenticated();
+//                .and()
+//                .formLogin()
+//                .loginPage("/login")
+//                .permitAll()
+//                .and()
+//                .logout()
+//                .invalidateHttpSession(true)
+//                .clearAuthentication(true)
+//                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+//                .logoutSuccessUrl("/login?logout")
+//                .permitAll();
         http.exceptionHandling().accessDeniedPage("/403");
+
+    }
+
+    @Bean
+    public DaoAuthenticationProvider daoAuthenticationProvider(){
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setUserDetailsService(userDetailsService);
+        daoAuthenticationProvider.setPasswordEncoder(bCryptPasswordEncoder());
+        return daoAuthenticationProvider;
+    }
+    @Override
+    protected void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception{
+        authenticationManagerBuilder.authenticationProvider(daoAuthenticationProvider());
     }
 }

@@ -25,12 +25,6 @@ public class PayMyBuddyApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(PayMyBuddyApplication.class, args);
-
-
-	}
-	@Bean
-	PasswordEncoder passwordEncoder(){
-		return new BCryptPasswordEncoder();
 	}
 //	@Bean
 //	CommandLineRunner commandLineRunner(UserTransactionRepository userTransactionRepository,LocalDateTimeService localDateTimeService){

@@ -1,7 +1,9 @@
 package com.application.paymybuddy.service;
 
 import com.application.paymybuddy.model.User;
+import com.application.paymybuddy.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,14 +17,18 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+@NoArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private SecurityService securityService;
+    private UserRepository userRepository;
 
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = securityService.loadUserByEmail(email);
+        User user = userRepository.findByEmail(email);
+        if(user == null){
+            throw new UsernameNotFoundException("User not found");
+        }
         Collection<GrantedAuthority> authorities =
                 user.getRoles()
                         .stream()
