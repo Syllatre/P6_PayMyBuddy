@@ -7,7 +7,10 @@ import com.application.paymybuddy.service.TransfertService;
 import com.application.paymybuddy.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,9 +20,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
-import java.util.HashSet;
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.Set;
 
 @Slf4j
 @AllArgsConstructor
@@ -30,29 +32,13 @@ public class TransfertController {
 
     private UserService userService;
 
-    @GetMapping("/user/connection")
-    public String getConnection(Model model) {
-        Set<User> userWithNoConnection = userService.UserListWithNoConnection();
-        model.addAttribute("userConnection", userWithNoConnection);
-        return "/user/connection";
-    }
-
-    @PostMapping("/user/connection")
-    public String postConnection(@ModelAttribute("userConnection") Long userConnection,
-                                 Model model,
-                                 BindingResult bindingResult) {
-        User user = userService.findById(2L).get();
-        Set<User> connection = new HashSet<>();
-        connection.add(userService.findById(userConnection).get());
-        user.setConnections(connection);
-        userService.save(user);
-        return "user/connection";
-    }
+    private ModelMapper modelMapper;
 
 
     @GetMapping("/transfert")
     public String findPaginated(Model model,
-                                @RequestParam(name = "page", required = false, defaultValue = "1") int page) {
+                                @RequestParam(name = "page", required = false, defaultValue = "1") int page,
+                                @AuthenticationPrincipal UserDetails userDetails) {
         int size = 5;
         Page<UserTransaction> pageTransfert = transfertService.findPaginated(page, size);
         List<UserTransaction> transfert = pageTransfert.getContent();
@@ -61,13 +47,7 @@ public class TransfertController {
         model.addAttribute("pages", new int[pageTransfert.getTotalPages()]);
         model.addAttribute("currentPage", page);
         model.addAttribute("userTransactionDTO", userTransactionDTO);
-        User user = userService.findById(2L).get();
-        Set<User> connections = new HashSet<>();
-        connections.add(userService.findById(9L).get());
-        connections.add(userService.findById(8L).get());
-        connections.add(userService.findById(7L).get());
-        connections.add(userService.findById(6L).get());
-        user.setConnections(connections);
+        User user = userService.findByEmail(userDetails.getUsername());
         model.addAttribute("user", user);
         return "transfert";
 
@@ -77,11 +57,54 @@ public class TransfertController {
     public String postTransfert(@Valid @ModelAttribute("userTransactionDTO") UserTransactionDTO userTransactionDTO,
                                 BindingResult bindingResult,
                                 Model model) {
-        User userSource = userService.findById(2L).get();
+        User userSource = userService.getCurrentUser();
         model.addAttribute("user", userSource);
 
-        User userDestination = userService.findById(userSource.getUserId()).get();
+        User userDestination = userService.findById(userTransactionDTO.getUserDestinationId()).get();
 
-        return "redirect:/usertransaction";
+        if (!userSource.getConnections().contains(userDestination)) {
+            bindingResult.rejectValue("userDestinationId", "userDestinationNotABuddy", "Please select a buddy !");
+            return "transfert";
+        }
+
+        UserTransaction userTransaction = convertToEntity(userTransactionDTO, userDestination);
+
+        //cross-record validation : calculate user amount after transaction, UserAmountException thrown if amount is invalid
+        BigDecimal userSourceAmountAfterTransaction;
+        BigDecimal userDestinationAmountAfterTransaction;
+//        try {
+        userSourceAmountAfterTransaction = transfertService.majUserSourceBalance(userSource, userTransaction.getAmount());
+        userDestinationAmountAfterTransaction = transfertService.majUserDestinationBalance(userDestination, userTransaction.getAmount());
+//
+//        } catch (UserAmountException e) {
+//            logger.debug("UserAmountException");
+//            bindingResult.rejectValue("amount", e.getErrorCode(), e.getDefaultMessage());
+//            return "usertransaction";
+//        }
+
+        //update users amount:
+        transfertService.majUserDestinationBalance(userDestination, userTransaction.getAmount());
+        transfertService.majUserSourceBalance(userSource, userTransaction.getAmount());
+
+        //create usertransaction:
+        transfertService.create(userTransaction);
+
+        //redirection do not use the current Model, it goes to GET /bantransaction
+        return "redirect:/transfert";
+
+    }
+
+    private UserTransaction convertToEntity(UserTransactionDTO userTransactionDTO, User userDestination) {
+
+        log.debug("DTO object to Entity conversion");
+
+        //Auto-mapping for same name attributes
+        UserTransaction userTransaction = modelMapper.map(userTransactionDTO, UserTransaction.class);
+        //userDestinationId is mapped automatically by modelmapper to userTransaction.id which is bad, reset to null:
+        userTransaction.setUserTransactionId(null);
+        //Mapping from DTO.id to Entity.User:
+        userTransaction.setUserDestination(userDestination);
+
+        return userTransaction;
     }
 }

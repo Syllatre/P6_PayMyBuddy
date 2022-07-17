@@ -13,6 +13,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     public User save(User user);
 
+//    @Query("SELECT * " +
+//            "FROM user " +
+//            "WHERE email = :email")
     User findByEmail(String email);
 
     @Query("SELECT CASE "
@@ -21,6 +24,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
             + "FROM User u "
             + "WHERE u.email = :email")
     public Boolean existsByEmail(@Param("email") String email);
+
+
 
     @Query("SELECT CASE "
             + "WHEN COUNT(u) > 0 THEN true"

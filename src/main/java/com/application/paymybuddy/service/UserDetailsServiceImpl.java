@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-@NoArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     private UserRepository userRepository;
@@ -34,8 +33,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                         .stream()
                         .map(role -> new SimpleGrantedAuthority(role.getRole()))
                         .collect(Collectors.toList());
-        org.springframework.security.core.userdetails.User userSecurity = new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), authorities);
-
-        return userSecurity;
+        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), authorities);
     }
 }

@@ -5,6 +5,10 @@ import com.application.paymybuddy.model.User;
 import com.application.paymybuddy.repository.RoleRepository;
 import com.application.paymybuddy.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +21,12 @@ import java.util.Set;
 
 @AllArgsConstructor
 @Service
-public class UserService {
+public class UserService  {
 
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     static BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+
 
     public User createUser(User user) {
 
@@ -33,7 +38,23 @@ public class UserService {
         user.setPassword(encoder.encode(user.getPassword()));
         user.setActive(true);
 
+
         return userRepository.save(user);
+    }
+
+    public String getCurrentUserDetailsUserName() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null) {
+            Object principal = auth.getPrincipal();
+            if (principal instanceof org.springframework.security.core.userdetails.User) {
+                return ((org.springframework.security.core.userdetails.User) principal).getUsername();
+            }
+        }
+        return null;
+    }
+
+    public User getCurrentUser() {
+        return findByEmail(getCurrentUserDetailsUserName());
     }
 
     public User findByEmail(String email) {
@@ -55,6 +76,7 @@ public class UserService {
     public List<User> findAll() {
         return userRepository.findAll();
     }
+
 
     public Set<User> UserListWithNoConnection() {
         User user = userRepository.findById(2L).get();
