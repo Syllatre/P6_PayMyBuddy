@@ -10,7 +10,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Set;
 
@@ -37,7 +36,7 @@ public class User {
     private String lastName;
 
     @NotEmpty
-    @Column(name = "username", nullable = false, length = 50)
+    @Column(name = "username", unique = true, nullable = false, length = 50)
     private String userName;
 
     @NotEmpty
@@ -67,4 +66,44 @@ public class User {
     @OneToMany(mappedBy = "userSource")
     private Set<UserTransaction> userTransactions;
 
+    @NotNull
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id",
+                    referencedColumnName = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "roles_id",
+                    referencedColumnName = "role_id"))
+    Set<Role> roles;
+
+    @NotNull
+    private boolean active;
+
+    public User(String firstname, String lastname, String userName, String email, String password, BigDecimal balance, Set<Role> roles, boolean active) {
+        this.firstName = firstname;
+        this.lastName = lastname;
+        this.userName = userName;
+        this.email = email;
+        this.password = password;
+        this.balance = balance;
+        this.roles = roles;
+        this.active = active;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", userName='" + userName + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", balance=" + balance +
+                ", connections=" + connections +
+                ", userTransactions=" + userTransactions +
+                ", roles=" + roles +
+                ", active=" + active +
+                '}';
+    }
 }

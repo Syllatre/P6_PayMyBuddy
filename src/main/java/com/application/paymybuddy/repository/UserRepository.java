@@ -16,6 +16,19 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     public User save(User user);
 
+    @Query("SELECT CASE "
+            + "WHEN COUNT(u) > 0 THEN true"
+            + " ELSE false END "
+            + "FROM User u "
+            + "WHERE u.email = :email")
+    public Boolean existsByEmail(@Param("email") String email);
 
-    public User findByEmailAndPassword(String email, String password);
+
+
+    @Query("SELECT CASE "
+            + "WHEN COUNT(u) > 0 THEN true"
+            + " ELSE false END "
+            + "FROM User u "
+            + "WHERE u.userName = :userName")
+    public Boolean existsByUsername(@Param("userName") String userName);
 }

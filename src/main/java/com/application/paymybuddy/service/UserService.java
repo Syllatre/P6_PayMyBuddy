@@ -1,8 +1,11 @@
 package com.application.paymybuddy.service;
 
+import com.application.paymybuddy.model.Role;
 import com.application.paymybuddy.model.User;
+import com.application.paymybuddy.repository.RoleRepository;
 import com.application.paymybuddy.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -18,17 +21,38 @@ public class UserService {
 
     private UserRepository userRepository;
 
-    public User createUser(User user) {
-        user.setBalance(new BigDecimal(0));
-        return userRepository.save(user);}
+    private RoleRepository roleRepository;
 
-    public Optional<User> findByEmail(String email){
-        return  userRepository.findByEmail(email);
+    static BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+
+
+
+
+
+    public User createUser(User user) {
+
+        Set<Role> roles = new HashSet<>();
+        Role role = roleRepository.findByRole("USER");
+        roles.add(role);
+        user.setRoles(roles);
+        user.setBalance(new BigDecimal(0));
+        user.setPassword(encoder.encode(user.getPassword()));
+        user.setActive(true);
+
+        return userRepository.save(user);
     }
 
    public Optional<User> findById(Long id){
         return userRepository.findById(id);
    }
+
+    public Boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    public Boolean existsByUserName(String userName) {
+        return userRepository.existsByUsername(userName);
+    }
 
    public List<User> findAll(){
         return userRepository.findAll();
