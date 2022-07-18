@@ -8,6 +8,8 @@ import com.application.paymybuddy.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -49,9 +51,10 @@ public class TransfertController {
 
 
 
-    @GetMapping("/transfert")
+    @GetMapping("/user/transfert")
     public String findPaginated(Model model,
-                                @RequestParam(name = "page", required = false, defaultValue = "1") int page) {
+                                @RequestParam(name = "page", required = false, defaultValue = "1") int page,
+                                @AuthenticationPrincipal UserDetails userDetails) {
         int size = 5;
         Page<UserTransaction> pageTransfert = transfertService.findPaginated(page, size);
         List<UserTransaction> transfert = pageTransfert.getContent();
@@ -60,19 +63,13 @@ public class TransfertController {
         model.addAttribute("pages", new int[pageTransfert.getTotalPages()]);
         model.addAttribute("currentPage", page);
         model.addAttribute("userTransactionDTO", userTransactionDTO);
-        User user = userService.findById(2L).get();
-        Set<User> connections = new HashSet<>();
-        connections.add(userService.findById(9L).get());
-        connections.add(userService.findById(8L).get());
-        connections.add(userService.findById(7L).get());
-        connections.add(userService.findById(6L).get());
-        user.setConnections(connections);
+        User user = userService.findByEmail(userDetails.getUsername());
         model.addAttribute("user", user);
         return "transfert";
 
     }
 
-    @PostMapping("/transfert")
+    @PostMapping("/user/transfert")
     public String postTransfert(@Valid @ModelAttribute("userTransactionDTO") UserTransactionDTO userTransactionDTO,
                                 BindingResult bindingResult,
                                 Model model) {
@@ -81,6 +78,6 @@ public class TransfertController {
 
         User userDestination = userService.findById(userSource.getUserId()).get();
 
-        return "redirect:/usertransaction";
+        return "redirect:/user/transaction";
     }
 }

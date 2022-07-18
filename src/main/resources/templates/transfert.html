@@ -21,7 +21,7 @@
             <div class="card-header">Réaliser un virement</div>
             <div class="card-body">
                 <form method="POST" th:object="${userTransactionDTO}"
-                      th:action="@{/transfert}">
+                      th:action="@{/user/transfert}">
                     <div class="row">
                         <div class="col">
                             <select th:field="*{userDestinationId}" class="form-control justify-content-centerform-signin-heading">

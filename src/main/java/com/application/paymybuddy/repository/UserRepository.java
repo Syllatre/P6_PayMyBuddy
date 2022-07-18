@@ -12,8 +12,6 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    public Optional<User> findByEmail(String email);
-
     public User save(User user);
 
     @Query("SELECT CASE "
@@ -31,4 +29,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
             + "FROM User u "
             + "WHERE u.userName = :userName")
     public Boolean existsByUsername(@Param("userName") String userName);
+
+    User findByEmail(String email);
 }

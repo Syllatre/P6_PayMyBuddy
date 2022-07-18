@@ -7,20 +7,21 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-
-import java.util.List;
 
 @AllArgsConstructor
 @Service
 public class TransfertService {
 
     private TransfertRepository transfertRepository;
+    private UserService userService;
 
-    public Page<UserTransaction> findPaginated(int page, int size) {
-        Pageable pageable = PageRequest.of(page - 1, size);
-        return transfertRepository.findAll(pageable);
+    public Page<UserTransaction> findPaginated(int pageNumber, int size) {
+        Pageable pageable = PageRequest.of(pageNumber - 1, size);
+        User getCurrentUser = userService.getCurrentUser();
+        Long getCurrentUserId = getCurrentUser.getUserId();
+        Long getCurrentUserIdTest = getCurrentUserId;
+        return transfertRepository.findUserTransactionByUserId(getCurrentUserId, pageable);
     }
+
 }
