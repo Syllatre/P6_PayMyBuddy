@@ -37,11 +37,11 @@ public class User {
 
     @NotEmpty
     @Email
-    @Column(name = "email", unique = true, nullable = false)
+    @Column(name = "email", unique = true, nullable = false, length = 100)
     private String email;
 
     @NotEmpty
-    @Column(name = "password", nullable = false)
+    @Column(name = "password", nullable = false, length = 255)
     private String password;
     @NotNull
     @Column(name = "balance", nullable = false)
@@ -68,7 +68,7 @@ public class User {
             name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id",
                     referencedColumnName = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "roles_id",
+            inverseJoinColumns = @JoinColumn(name = "role_id",
                     referencedColumnName = "role_id"))
     Set<Role> roles;
 

@@ -30,26 +30,6 @@ public class TransfertController {
 
     private UserService userService;
 
-    @GetMapping("/connection")
-    public String getConnection(Model model){
-    Set<User> userWithNoConnection = userService.UserListWithNoConnection();
-    model.addAttribute("userConnection",userWithNoConnection);
-    return "connection";
-    }
-
-    @PostMapping("/connection")
-    public String postConnection(@ModelAttribute("userConnection") Long userConnection,
-                                 Model model,
-                                 BindingResult bindingResult){
-        User user = userService.findById(2L).get();
-        Set<User> connection = new HashSet<>();
-        connection.add(userService.findById(userConnection).get());
-        user.setConnections(connection);
-        userService.save(user);
-        return "connection";
-    }
-
-
 
     @GetMapping("/user/transfert")
     public String findPaginated(Model model,
@@ -73,7 +53,7 @@ public class TransfertController {
     public String postTransfert(@Valid @ModelAttribute("userTransactionDTO") UserTransactionDTO userTransactionDTO,
                                 BindingResult bindingResult,
                                 Model model) {
-        User userSource = userService.findById(2L).get();
+        User userSource = userService.getCurrentUser();
         model.addAttribute("user", userSource);
 
         User userDestination = userService.findById(userSource.getUserId()).get();

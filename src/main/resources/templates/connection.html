@@ -12,7 +12,7 @@
 <div layout:fragment="content1">
     <div class="container p-5 my-5 d-flex justify-content-center flex-column align-items-center">
         <form method="POST" th:object="${userConnection}"
-              th:action="@{/connection}">
+              th:action="@{/user/connection}">
             <div class="col">
                 <select th:field="*{userConnection}" class="form-control justify-content-centerform-signin-heading">
                     <option value="0"> Sélectionner le bénéficiaire</option>

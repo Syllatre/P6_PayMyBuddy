@@ -19,9 +19,7 @@ public class TransfertService {
     public Page<UserTransaction> findPaginated(int pageNumber, int size) {
         Pageable pageable = PageRequest.of(pageNumber - 1, size);
         User getCurrentUser = userService.getCurrentUser();
-        Long getCurrentUserId = getCurrentUser.getUserId();
-        Long getCurrentUserIdTest = getCurrentUserId;
-        return transfertRepository.findUserTransactionByUserId(getCurrentUserId, pageable);
+        return transfertRepository.findAll(pageable);
     }
 
 }

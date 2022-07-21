@@ -3,7 +3,6 @@ package com.application.paymybuddy.service;
 import com.application.paymybuddy.model.User;
 import com.application.paymybuddy.repository.UserRepository;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

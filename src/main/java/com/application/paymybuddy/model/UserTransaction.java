@@ -3,6 +3,7 @@ package com.application.paymybuddy.model;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -25,14 +26,18 @@ public class UserTransaction {
     @JoinColumn(name = "user_destination_id")
     private User userDestination;
 
+
     @Column(name ="date_user_transaction")
     private LocalDateTime dateUserTransaction;
 
-    @Column(name ="comments")
+
+    @Column(name ="comments",length = 200)
     private String comments;
+
 
     @Column(name ="amount")
     private BigDecimal amount;
+
 
     @Column(name ="fees")
     private BigDecimal fees;

@@ -12,6 +12,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import javax.sql.DataSource;
+
 
 @AllArgsConstructor
 @Configuration
@@ -19,6 +21,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private UserDetailsService userDetailsService;
+
+//    private DataSource dataSource;
 
 
     @Override
@@ -57,6 +61,19 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder.authenticationProvider(daoAuthenticationProvider());
     }
+
+
+//    public void configureGlobal(AuthenticationManagerBuilder auth)
+//            throws Exception {
+//        auth.jdbcAuthentication()
+//                .dataSource(dataSource)
+//                .usersByUsernameQuery("select email,password,active "
+//                        + "from user "
+//                        + "where email = ?")
+//                .authoritiesByUsernameQuery("select email,authority "
+//                        + "from authorities "
+//                        + "where email = ?");
+//    }
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {

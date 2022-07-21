@@ -10,8 +10,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TransfertRepository extends JpaRepository<UserTransaction,Long> {
-    @Query(value =
-            "SELECT * FROM user_transaction  WHERE user_source_id = :usersourceid OR user_destination_id = :usersourceid"
-            , nativeQuery = true)
-    public Page<UserTransaction> findUserTransactionByUserId(@Param("usersourceid") Long userSourceId, Pageable pageRequest);
+//    @Query(value =
+//            "SELECT * FROM user_transaction  WHERE user_source_id = :usersourceid OR user_destination_id = :usersourceid"
+//            , nativeQuery = true)
+//    public Page<UserTransaction> findUserTransactionByUserId(@Param("usersourceid") Long userSourceId, Pageable pageRequest);
+    public Page<UserTransaction> findAll(Pageable pageable);
 }

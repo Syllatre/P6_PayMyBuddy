@@ -31,8 +31,7 @@ public class UserService {
     public User createUser(User user) {
 
         Set<Role> roles = new HashSet<>();
-        Role role = roleRepository.findByRole("USER");
-        roles.add(role);
+        roles.add(roleRepository.findByRole("USER"));
         user.setRoles(roles);
         user.setBalance(new BigDecimal(0));
         user.setPassword(encoder.encode(user.getPassword()));
