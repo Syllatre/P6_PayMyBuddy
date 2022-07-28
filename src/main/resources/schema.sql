@@ -1,5 +1,5 @@
 
-CREATE SCHEMA IF NOT EXISTS `paymybuddy` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+--CREATE SCHEMA IF NOT EXISTS `paymybuddy` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
 
 USE paymybuddy;
 
@@ -48,20 +48,20 @@ CREATE TABLE IF NOT EXISTS `paymybuddy`.`user_transaction` (
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------
--- Table `paymybuddy`.`user_connections`
+-- Table `paymybuddy`.`user_connection`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `paymybuddy`.`user_connections` (
+CREATE TABLE IF NOT EXISTS `paymybuddy`.`user_connection` (
   `user_source_id` INT UNSIGNED NOT NULL,
   `user_destination_id` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`user_source_id`, `user_destination_id`),
-  INDEX `fk_user_connections_user_destination_id` USING BTREE (`user_source_id`) INVISIBLE,
-  INDEX `fk_user_connections_user_destination_id_idx` USING BTREE (`user_destination_id`) INVISIBLE,
-  CONSTRAINT `fk_user_connections_user_destination_id`
+  INDEX `fk_user_connection_user_destination_id` USING BTREE (`user_source_id`) INVISIBLE,
+  INDEX `fk_user_connection_user_destination_id_idx` USING BTREE (`user_destination_id`) INVISIBLE,
+  CONSTRAINT `fk_user_connection_user_destination_id`
     FOREIGN KEY (`user_destination_id`)
     REFERENCES `paymybuddy`.`user` (`user_id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
-  CONSTRAINT `fk_user_connections_user_source_id`
+  CONSTRAINT `fk_user_connection_user_source_id`
     FOREIGN KEY (`user_source_id`)
     REFERENCES `paymybuddy`.`user` (`user_id`)
     ON DELETE CASCADE
@@ -91,8 +91,8 @@ CREATE TABLE IF NOT EXISTS `paymybuddy`.`user_roles` (
   CONSTRAINT `fk_user_roles_user`
     FOREIGN KEY (`user_id`)
     REFERENCES `paymybuddy`.`user` (`user_id`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT,
   CONSTRAINT `fk_user_roles_role`
     FOREIGN KEY (`role_id`)
     REFERENCES `paymybuddy`.`role` (`role_id`)

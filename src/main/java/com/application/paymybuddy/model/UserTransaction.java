@@ -3,11 +3,13 @@ package com.application.paymybuddy.model;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -30,7 +32,7 @@ public class UserTransaction {
     @Column(name ="date_user_transaction")
     private LocalDateTime dateUserTransaction;
 
-
+    @NotBlank
     @Column(name ="comments",length = 200)
     private String comments;
 
@@ -41,4 +43,17 @@ public class UserTransaction {
 
     @Column(name ="fees")
     private BigDecimal fees;
+
+//    @Override
+//    public String toString() {
+//        return "UserTransaction{" +
+//                "userTransactionId=" + userTransactionId +
+//                ", userSource=" + userSource +
+//                ", userDestination=" + userDestination +
+//                ", dateUserTransaction=" + dateUserTransaction +
+//                ", comments='" + comments + '\'' +
+//                ", amount=" + amount +
+//                ", fees=" + fees +
+//                '}';
+//    }
 }

@@ -44,8 +44,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .clearAuthentication(true)
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/login?logout")
-                .permitAll();
-        http.exceptionHandling().accessDeniedPage("/403");
+                .permitAll()
+                .and()
+                .rememberMe().key("uniqueAndSecret");
 
     }
 

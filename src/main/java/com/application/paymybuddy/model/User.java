@@ -15,7 +15,8 @@ import java.util.Set;
 @DynamicUpdate
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class User {
 
     @Id
@@ -50,9 +51,9 @@ public class User {
     //utilisation de joinTable, https://qastack.fr/programming/5478328/in-which-case-do-you-use-the-jpa-jointable-annotation
     @ManyToMany
     @JoinTable(name = "user_connection",
-            joinColumns = @JoinColumn(name = "user_id",
+            joinColumns = @JoinColumn(name = "user_source_id",
                     referencedColumnName = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "connection_id",
+            inverseJoinColumns = @JoinColumn(name = "user_destination_id",
                     referencedColumnName = "user_id"))
     private Set<User> connections;
 
@@ -86,20 +87,20 @@ public class User {
         this.active = active;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "userId=" + userId +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", userName='" + userName + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", balance=" + balance +
-                ", connections=" + connections +
-                ", userTransactions=" + userTransactions +
-                ", roles=" + roles +
-                ", active=" + active +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "User{" +
+//                "userId=" + userId +
+//                ", firstName='" + firstName + '\'' +
+//                ", lastName='" + lastName + '\'' +
+//                ", userName='" + userName + '\'' +
+//                ", email='" + email + '\'' +
+//                ", password='" + password + '\'' +
+//                ", balance=" + balance +
+//                ", connections=" + connections +
+//                ", userTransactions=" + userTransactions +
+//                ", roles=" + roles +
+//                ", active=" + active +
+//                '}';
+//    }
 }

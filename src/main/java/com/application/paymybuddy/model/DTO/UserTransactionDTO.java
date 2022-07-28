@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -14,12 +15,13 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class UserTransactionDTO implements Serializable {
 
-    @NotBlank
+    @NotNull
     private Long userDestinationId;
 
+    @Positive
     @NotNull
     private BigDecimal amount;
 
     @NotBlank
-    private String comment;
+    private String comments;
 }

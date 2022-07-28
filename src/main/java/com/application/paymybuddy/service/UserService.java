@@ -33,7 +33,7 @@ public class UserService {
         Set<Role> roles = new HashSet<>();
         roles.add(roleRepository.findByRole("USER"));
         user.setRoles(roles);
-        user.setBalance(new BigDecimal(0));
+        user.setBalance(new BigDecimal(0.00));
         user.setPassword(encoder.encode(user.getPassword()));
         user.setActive(true);
 
@@ -75,7 +75,7 @@ public class UserService {
     }
 
     public Set<User> UserListWithNoConnection() {
-        User user = userRepository.findById(2L).get();
+        User user = getCurrentUser();
         List<User> allUser = userRepository.findAll();
         Set<User> userConnection = user.getConnections();
         Set<User> userWithNoConnection = new HashSet<>();
@@ -91,7 +91,6 @@ public class UserService {
         }
         return userWithNoConnection;
     }
-
     public User save(User user) {
         return userRepository.save(user);
     }

@@ -14,14 +14,13 @@
         <div class="position-relative">
             <div class=" col mb-4" th:text="'Solde: '+ ${user.balance}+ ' €'"></div>
             <div class="position-absolute top-0 end-0" >
-                <a class="btn btn-primary" href="/connection" role="button">Ajouter un bénéficiaire</a>
+                <a class="btn btn-primary" href="/user/connection" role="button">Ajouter un bénéficiaire</a>
             </div>
         </div>
         <div class="card">
             <div class="card-header">Réaliser un virement</div>
             <div class="card-body">
-                <form method="POST" th:object="${userTransactionDTO}"
-                      th:action="@{/user/transfert}">
+                <form method="POST" th:object="${userTransactionDTO}" th:action="@{/user/transfert}">
                     <div class="row">
                         <div class="col">
                             <select th:field="*{userDestinationId}" class="form-control justify-content-centerform-signin-heading">
@@ -43,14 +42,17 @@
                             <span class="has-error" th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}"></span>
                         </div>
                         <div class="col">
-                            <input th:field="*{comment}"  type="text" class="form-control"  placeholder="Objet du virement">
-                            <span class="has-error" th:if="${#fields.hasErrors('comment')}" th:errors="*{comment}"></span>
+                            <input th:field="*{comments}"  type="text" class="form-control"  placeholder="Objet du virement">
+                            <span class="has-error" th:if="${#fields.hasErrors('comments')}" th:errors="*{comments}"></span>
                         </div>
                         <div class="col sm-4">
                             <button class="btn btn-success" type="submit">Valider</button>
                         </div>
                     </div>
                 </form>
+                <div th:if="${param.success}">
+                    <div class="alert alert-info">Transaction réussi</div>
+                </div>
             </div>
         </div>
     </div>
@@ -71,8 +73,8 @@
                     </thead>
                     <tbody>
                     <tr th:each="transaction:${transfert}">
-                        <td th:text="${transaction.userSource.email}"></td>
-                        <td th:text="${transaction.userDestination.email}"></td>
+                        <td th:text="${transaction.userSource.userName}"></td>
+                        <td th:text="${transaction.userDestination.userName}"></td>
                         <td th:text="${transaction.dateUserTransaction}"></td>
                         <td th:text="${transaction.amount}"></td>
                         <td th:text="${transaction.fees}"></td>
@@ -82,7 +84,7 @@
                 </table>
                 <ul class="nav nav-pills">
                     <li th:each="page,status:${pages}">
-                        <a th:class="${status.count==currentPage?'btn btn-secondary ms-1':'btn btn-outline- ms-1'}"
+                        <a th:class="${status.count==currentPage? 'btn btn-secondary ms-1':'btn btn-outline- ms-1'}"
                            th:text="${status.count}"
                            th:href="@{transfert(page=${status.count})}"></a>
                     </li>
