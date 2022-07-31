@@ -42,7 +42,7 @@
                             <span class="has-error" th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}"></span>
                         </div>
                         <div class="col">
-                            <input th:field="*{comments}"  type="text" class="form-control"  placeholder="Objet du virement">
+                            <input th:field="*{comments}"  type="text" class="form-control"  placeholder="Objet du virement (obligatoire)" required>
                             <span class="has-error" th:if="${#fields.hasErrors('comments')}" th:errors="*{comments}"></span>
                         </div>
                         <div class="col sm-4">

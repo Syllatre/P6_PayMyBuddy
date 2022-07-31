@@ -27,26 +27,6 @@ public class TransfertService {
         return transfertRepository.findByUserSourceOrUserDestination(getCurrentUser,getCurrentUser,pageable);
     }
 
-    public BigDecimal majUserSourceBalance(User user, BigDecimal amount) {
-        User userDataBase = userRepository.findByEmail(user.getEmail());
-        BigDecimal userSourceBalance = userDataBase.getBalance();
-        userSourceBalance.subtract(amount);
-        userDataBase.setBalance(userSourceBalance);
-        userService.save(userDataBase);
-        return userSourceBalance;
-
-    }
-
-    public BigDecimal majUserDestinationBalance(User user, BigDecimal amount) {
-        User userDataBase = userRepository.findByEmail(user.getEmail());
-        BigDecimal fees = new BigDecimal(1.0);
-        BigDecimal userDestinationBalance = userDataBase.getBalance().subtract(fees);
-        userDestinationBalance.add(amount);
-        userDataBase.setBalance(userDestinationBalance);
-        userService.save(userDataBase);
-        return userDestinationBalance;
-
-    }
     public UserTransaction getTransaction (UserTransaction userTransaction){
 
         // creation de l'objet transaction

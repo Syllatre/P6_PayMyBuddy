@@ -1,10 +1,12 @@
 package com.application.paymybuddy.model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -21,7 +23,7 @@ public class UserTransaction {
     private Long userTransactionId;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "user_source_id",nullable = false)
+    @JoinColumn(name = "user_source_id", nullable = false)
     private User userSource;
 
     @ManyToOne(optional = false)
@@ -29,31 +31,19 @@ public class UserTransaction {
     private User userDestination;
 
 
-    @Column(name ="date_user_transaction")
+    @Column(name = "date_user_transaction")
     private LocalDateTime dateUserTransaction;
 
     @NotBlank
-    @Column(name ="comments",length = 200)
+    @Column(name = "comments", length = 200)
     private String comments;
 
 
-    @Column(name ="amount")
+    @Column(name = "amount")
     private BigDecimal amount;
 
 
-    @Column(name ="fees")
+    @Column(name = "fees")
     private BigDecimal fees;
 
-//    @Override
-//    public String toString() {
-//        return "UserTransaction{" +
-//                "userTransactionId=" + userTransactionId +
-//                ", userSource=" + userSource +
-//                ", userDestination=" + userDestination +
-//                ", dateUserTransaction=" + dateUserTransaction +
-//                ", comments='" + comments + '\'' +
-//                ", amount=" + amount +
-//                ", fees=" + fees +
-//                '}';
-//    }
 }

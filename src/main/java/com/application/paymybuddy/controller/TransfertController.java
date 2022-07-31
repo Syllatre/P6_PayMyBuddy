@@ -55,21 +55,29 @@ public class TransfertController {
     @Transactional
     @PostMapping("/user/transfert")
     public String postTransfert(@Valid @ModelAttribute("userTransactionDTO") UserTransactionDTO userTransactionDTO,
+                                @RequestParam(name = "page", required = false, defaultValue = "1") int page,
                                 BindingResult bindingResult,Model model) {
         if (bindingResult.hasErrors()) {
             return "transfert";
         }
         User user = userService.getCurrentUser();
         User userDestination = userService.findById(userTransactionDTO.getUserDestinationId()).get();
+        int size = 5;
+        Page<UserTransaction> pageTransfert = transfertService.findPaginated(page, size);
+        List<UserTransaction> transfert = pageTransfert.getContent();
+        model.addAttribute("transfert", transfert);
+        model.addAttribute("pages", new int[pageTransfert.getTotalPages()]);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("user", user);
 
-        if (!user.getConnections().contains(userDestination)) {
-            bindingResult.rejectValue("userDestinationId", "userDestinationNotABuddy", "Veuillez choisir un buddy");
-            return "transfert";
-        }
+//        if (!user.getConnections().contains(userDestination)) {
+//            bindingResult.rejectValue("userDestinationId", "userDestinationNotABuddy", "Veuillez choisir un buddy");
+//            return "transfert";
+//        }
 
         int validation = user.getBalance().compareTo(userTransactionDTO.getAmount());
 
-        if (validation == -1) {
+        if (validation < 0) {
             bindingResult.rejectValue("amount", "insufficientBalance", "Votre solde est insuffisant");
             return "transfert";
         }

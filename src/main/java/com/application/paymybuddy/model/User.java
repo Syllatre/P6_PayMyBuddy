@@ -86,21 +86,4 @@ public class User {
         this.roles = roles;
         this.active = active;
     }
-
-//    @Override
-//    public String toString() {
-//        return "User{" +
-//                "userId=" + userId +
-//                ", firstName='" + firstName + '\'' +
-//                ", lastName='" + lastName + '\'' +
-//                ", userName='" + userName + '\'' +
-//                ", email='" + email + '\'' +
-//                ", password='" + password + '\'' +
-//                ", balance=" + balance +
-//                ", connections=" + connections +
-//                ", userTransactions=" + userTransactions +
-//                ", roles=" + roles +
-//                ", active=" + active +
-//                '}';
-//    }
 }
