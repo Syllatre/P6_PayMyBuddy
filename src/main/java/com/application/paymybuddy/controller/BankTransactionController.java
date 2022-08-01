@@ -1,8 +1,11 @@
 package com.application.paymybuddy.controller;
 
+import com.application.paymybuddy.model.BankTransaction;
+import com.application.paymybuddy.model.DTO.BankTransactionDTO;
 import com.application.paymybuddy.model.DTO.UserTransactionDTO;
 import com.application.paymybuddy.model.User;
 import com.application.paymybuddy.model.UserTransaction;
+import com.application.paymybuddy.service.BankTransactionService;
 import com.application.paymybuddy.service.TransfertService;
 import com.application.paymybuddy.service.UserService;
 import lombok.AllArgsConstructor;
@@ -24,43 +27,43 @@ import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
-@AllArgsConstructor
 @Controller
-public class TransfertController {
+@AllArgsConstructor
+public class BankTransactionController {
 
     private TransfertService transfertService;
+
+    private BankTransactionService bankTransactionService;
 
     private UserService userService;
 
     private ModelMapper modelMapper;
 
 
-    @GetMapping("/user/transfert")
-    public String findPaginated(@ModelAttribute("userTransactionDTO") UserTransactionDTO userTransactionDTO, Model model,
+    @GetMapping("/user/bank")
+    public String findPaginated(@ModelAttribute("bankTransactionDTO") BankTransactionDTO bankTransactionDTO, Model model,
                                 @RequestParam(name = "page", required = false, defaultValue = "1") int page,
                                 @AuthenticationPrincipal UserDetails userDetails) {
         int size = 5;
-        Page<UserTransaction> pageTransfert = transfertService.findPaginated(page, size);
-        List<UserTransaction> transfert = pageTransfert.getContent();
-//        UserTransactionDTO userTransactionDTO = new UserTransactionDTO();
+        Page<BankTransaction> pageTransfert = bankTransactionService.findPaginated(page, size);
+        List<BankTransaction> transfert = pageTransfert.getContent();
         model.addAttribute("transfert", transfert);
         model.addAttribute("pages", new int[pageTransfert.getTotalPages()]);
         model.addAttribute("currentPage", page);
-        model.addAttribute("userTransactionDTO", userTransactionDTO);
+        model.addAttribute("bankTransactionDTO", bankTransactionDTO);
         User user = userService.findByEmail(userDetails.getUsername());
         model.addAttribute("user", user);
-        return "transfert";
+        return "bank";
 
     }
     @Transactional
-    @PostMapping("/user/transfert")
-    public String postTransfert(@Valid @ModelAttribute("userTransactionDTO") UserTransactionDTO userTransactionDTO,
+    @PostMapping("/user/bank")
+    public String postTransfert(@Valid @ModelAttribute("bankTransactionDTO") BankTransactionDTO bankTransactionDTO,
                                 @RequestParam(name = "page", required = false, defaultValue = "1") int page,
-                                BindingResult bindingResult,Model model) {
+                                BindingResult bindingResult, Model model) {
 
-        if(bindingResult.hasErrors()) {return "transfert";}
+        if(bindingResult.hasErrors()) {return "bank";}
         User user = userService.getCurrentUser();
-        User userDestination = userService.findById(userTransactionDTO.getUserDestinationId()).get();
         int size = 5;
         Page<UserTransaction> pageTransfert = transfertService.findPaginated(page, size);
         List<UserTransaction> transfert = pageTransfert.getContent();
@@ -69,37 +72,24 @@ public class TransfertController {
         model.addAttribute("currentPage", page);
         model.addAttribute("user", user);
 
-        int validation = user.getBalance().compareTo(userTransactionDTO.getAmount());
 
-        if (validation < 0) {
-            bindingResult.rejectValue("amount", "insufficientBalance", "Votre solde est insuffisant");
-            return "transfert";
-        }
 
-//        if (userTransactionDTO.getComments().equals("") || userTransactionDTO.getComments().length() < 3) {
-//            bindingResult.rejectValue("comment", "reasonRequired", "Veuillez renseigner le descriptif");
-//            return "transfert";
-//        }
+        BankTransaction bankTransaction = convertToEntity(bankTransactionDTO);
 
-        UserTransaction userTransaction = convertToEntity(userTransactionDTO, userDestination);
+        bankTransactionService.getTransaction(bankTransaction);
 
-        transfertService.getTransaction(userTransaction);
-
-        return "redirect:/user/transfert?success";
+        return "redirect:/user/bank?success";
 
     }
 
-    private UserTransaction convertToEntity(UserTransactionDTO userTransactionDTO, User userDestination) {
-
-        log.debug("DTO object to Entity conversion");
+    private BankTransaction convertToEntity(BankTransactionDTO bankTransactionDTO) {
 
         //Auto-mapping for same name attributes
-        UserTransaction userTransaction = modelMapper.map(userTransactionDTO, UserTransaction.class);
+        BankTransaction bankTransaction = modelMapper.map(bankTransactionDTO, BankTransaction.class);
         //userDestinationId is mapped automatically by modelmapper to userTransaction.id which is bad, reset to null:
-        userTransaction.setUserTransactionId(null);
+        bankTransaction.setBankTransactionId(null);
         //Mapping from DTO.id to Entity.User:
-        userTransaction.setUserDestination(userDestination);
 
-        return userTransaction;
+        return bankTransaction;
     }
 }

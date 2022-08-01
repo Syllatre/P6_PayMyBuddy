@@ -57,8 +57,8 @@ public class User {
                     referencedColumnName = "user_id"))
     private Set<User> connections;
 
-//    @OneToMany(mappedBy = "user")
-//    private Set<BankTransaction> bankTransactions;
+    @OneToMany(mappedBy = "user")
+    private Set<BankTransaction> bankTransactions;
 
     @OneToMany(mappedBy = "userSource")
     private Set<UserTransaction> userTransactions;

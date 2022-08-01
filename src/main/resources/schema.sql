@@ -1,7 +1,9 @@
 
---CREATE SCHEMA IF NOT EXISTS `paymybuddy` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+CREATE SCHEMA IF NOT EXISTS `paymybuddy` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
 
 USE paymybuddy;
+
+SET FOREIGN KEY
 
 -- -----------------------------------------------------
 -- Table `paymybuddy`.`user`
@@ -96,6 +98,6 @@ CREATE TABLE IF NOT EXISTS `paymybuddy`.`user_roles` (
   CONSTRAINT `fk_user_roles_role`
     FOREIGN KEY (`role_id`)
     REFERENCES `paymybuddy`.`role` (`role_id`)
-    ON DELETE RESTRICT
-    ON UPDATE RESTRICT)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;

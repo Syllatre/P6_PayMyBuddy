@@ -31,7 +31,8 @@ public class TransfertService {
 
         // creation de l'objet transaction
         userTransaction.setUserSource(userService.getCurrentUser());
-        userTransaction.setFees(new BigDecimal(1));
+        BigDecimal fees = userTransaction.getAmount().multiply(BigDecimal.valueOf(0.5)).divide(BigDecimal.valueOf(100));
+        userTransaction.setFees(fees);
         userTransaction.setDateUserTransaction(localDateTimeService.now());
         transfertRepository.save(userTransaction);
 

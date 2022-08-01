@@ -4,6 +4,7 @@ import com.application.paymybuddy.model.User;
 import com.application.paymybuddy.service.ConnectionService;
 import com.application.paymybuddy.service.UserService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
+@Slf4j
 @Controller
 @AllArgsConstructor
 public class ConnectionController {
