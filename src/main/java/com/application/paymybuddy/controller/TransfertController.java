@@ -42,11 +42,12 @@ public class TransfertController {
         int size = 5;
         Page<UserTransaction> pageTransfert = transfertService.findPaginated(page, size);
         List<UserTransaction> transfert = pageTransfert.getContent();
-//        UserTransactionDTO userTransactionDTO = new UserTransactionDTO();
+
         model.addAttribute("transfert", transfert);
         model.addAttribute("pages", new int[pageTransfert.getTotalPages()]);
         model.addAttribute("currentPage", page);
         model.addAttribute("userTransactionDTO", userTransactionDTO);
+
         User user = userService.findByEmail(userDetails.getUsername());
         model.addAttribute("user", user);
         return "transfert";
@@ -76,17 +77,10 @@ public class TransfertController {
             return "transfert";
         }
 
-//        if (userTransactionDTO.getComments().equals("") || userTransactionDTO.getComments().length() < 3) {
-//            bindingResult.rejectValue("comment", "reasonRequired", "Veuillez renseigner le descriptif");
-//            return "transfert";
-//        }
-
         UserTransaction userTransaction = convertToEntity(userTransactionDTO, userDestination);
-
         transfertService.getTransaction(userTransaction);
 
         return "redirect:/user/transfert?success";
-
     }
 
     private UserTransaction convertToEntity(UserTransactionDTO userTransactionDTO, User userDestination) {

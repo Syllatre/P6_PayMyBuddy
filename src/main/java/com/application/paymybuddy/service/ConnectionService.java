@@ -13,14 +13,12 @@ import org.springframework.stereotype.Service;
 public class ConnectionService {
 
     private UserService userService;
+
     private UserRepository userRepository;
 
     public Page<User> getAllConnectionByCurrentUser(int pageNumber, int size) {
         Pageable pageable = PageRequest.of(pageNumber - 1, size);
         User getCurrentUser = userService.getCurrentUser();
         return userRepository.findConnectionById(getCurrentUser.getUserId(), pageable);
-
     }
-
-
 }

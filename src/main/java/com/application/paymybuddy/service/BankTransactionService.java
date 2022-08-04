@@ -2,10 +2,10 @@ package com.application.paymybuddy.service;
 
 import com.application.paymybuddy.model.BankTransaction;
 import com.application.paymybuddy.model.User;
-import com.application.paymybuddy.model.UserTransaction;
 import com.application.paymybuddy.repository.BankTransactionRepository;
 import com.application.paymybuddy.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class BankTransactionService {
@@ -30,19 +31,23 @@ public class BankTransactionService {
         return bankTransactionRepository.findByUser(getCurrentUser, pageable);
     }
 
+
     public BankTransaction getTransaction (BankTransaction bankTransaction){
+        log.debug("Calling create(BankTransaction BankTransaction)");
 
         // creation de l'objet transaction
-        bankTransaction.setUser(userService.getCurrentUser());
+        User user = userService.getCurrentUser();
+        bankTransaction.setUser(user);
         bankTransaction.setDatetime(localDateTimeService.now());
         bankTransactionRepository.save(bankTransaction);
-        User user = userService.getCurrentUser();
+        log.debug("transaction save");
 
         //Mis à jour du solde
         BigDecimal newBalance = user.getBalance().add(bankTransaction.getAmount());
         user.setBalance(newBalance);
 
         userRepository.save(user);
+        log.debug("update balance of current user");
 
 
         return bankTransaction;

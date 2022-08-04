@@ -24,15 +24,16 @@ public class TransfertService {
     public Page<UserTransaction> findPaginated(int pageNumber, int size) {
         Pageable pageable = PageRequest.of(pageNumber - 1, size);
         User getCurrentUser = userService.getCurrentUser();
-        return transfertRepository.findByUserSourceOrUserDestination(getCurrentUser,getCurrentUser,pageable);
+        return transfertRepository.findByUserSourceOrUserDestination(getCurrentUser, getCurrentUser, pageable);
     }
 
-    public UserTransaction getTransaction (UserTransaction userTransaction){
+
+    public UserTransaction getTransaction(UserTransaction userTransaction) {
 
         // creation de l'objet transaction
         userTransaction.setUserSource(userService.getCurrentUser());
-        BigDecimal fees = userTransaction.getAmount().multiply(BigDecimal.valueOf(0.5)).divide(BigDecimal.valueOf(100));
-        userTransaction.setFees(fees);
+
+        userTransaction.setFees(getFees(userTransaction.getAmount()));
         userTransaction.setDateUserTransaction(localDateTimeService.now());
         transfertRepository.save(userTransaction);
 
@@ -48,4 +49,8 @@ public class TransfertService {
         return userTransaction;
     }
 
+    public BigDecimal getFees (BigDecimal amount){
+        BigDecimal fees = amount.multiply(BigDecimal.valueOf(0.5)).divide(BigDecimal.valueOf(100));
+        return fees;
+    }
 }

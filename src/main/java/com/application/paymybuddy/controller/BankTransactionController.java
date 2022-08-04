@@ -2,7 +2,6 @@ package com.application.paymybuddy.controller;
 
 import com.application.paymybuddy.model.BankTransaction;
 import com.application.paymybuddy.model.DTO.BankTransactionDTO;
-import com.application.paymybuddy.model.DTO.UserTransactionDTO;
 import com.application.paymybuddy.model.User;
 import com.application.paymybuddy.model.UserTransaction;
 import com.application.paymybuddy.service.BankTransactionService;
@@ -56,13 +55,16 @@ public class BankTransactionController {
         return "bank";
 
     }
+
     @Transactional
     @PostMapping("/user/bank")
     public String postTransfert(@Valid @ModelAttribute("bankTransactionDTO") BankTransactionDTO bankTransactionDTO,
                                 @RequestParam(name = "page", required = false, defaultValue = "1") int page,
                                 BindingResult bindingResult, Model model) {
 
-        if(bindingResult.hasErrors()) {return "bank";}
+        if (bindingResult.hasErrors()) {
+            return "bank";
+        }
         User user = userService.getCurrentUser();
         int size = 5;
         Page<UserTransaction> pageTransfert = transfertService.findPaginated(page, size);
@@ -71,7 +73,6 @@ public class BankTransactionController {
         model.addAttribute("pages", new int[pageTransfert.getTotalPages()]);
         model.addAttribute("currentPage", page);
         model.addAttribute("user", user);
-
 
 
         BankTransaction bankTransaction = convertToEntity(bankTransactionDTO);

@@ -5,6 +5,7 @@ import com.application.paymybuddy.model.User;
 import com.application.paymybuddy.repository.RoleRepository;
 import com.application.paymybuddy.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-
+@Slf4j
 @AllArgsConstructor
 @Service
 public class UserService {
@@ -29,6 +30,7 @@ public class UserService {
 
 
     public User createUser(User user) {
+
 
         Set<Role> roles = new HashSet<>();
         roles.add(roleRepository.findByRole("USER"));
@@ -74,23 +76,6 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public Set<User> UserListWithNoConnection() {
-        User user = getCurrentUser();
-        List<User> allUser = userRepository.findAll();
-        Set<User> userConnection = user.getConnections();
-        Set<User> userWithNoConnection = new HashSet<>();
-        for (User allUsers : allUser) {
-            for (User userConnections : userConnection) {
-                if (userConnections.equals(allUsers)) {
-                    allUser.remove(userConnections);
-                }
-            }
-        }
-        for (User allUserFilter : allUser) {
-            userWithNoConnection.add(allUserFilter);
-        }
-        return userWithNoConnection;
-    }
     public User save(User user) {
         return userRepository.save(user);
     }
