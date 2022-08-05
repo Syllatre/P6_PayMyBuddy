@@ -26,17 +26,17 @@ public class UserService {
 
     private RoleRepository roleRepository;
 
-    static BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+    static BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
 
     public User createUser(User user) {
 
-
+        String encryptedPassword = encoder.encode(user.getPassword());
         Set<Role> roles = new HashSet<>();
         roles.add(roleRepository.findByRole("USER"));
         user.setRoles(roles);
         user.setBalance(new BigDecimal(0.00));
-        user.setPassword(encoder.encode(user.getPassword()));
+        user.setPassword(encryptedPassword);
         user.setActive(true);
 
         return userRepository.save(user);
@@ -70,10 +70,6 @@ public class UserService {
 
     public Boolean existsByUserName(String userName) {
         return userRepository.existsByUsername(userName);
-    }
-
-    public List<User> findAll() {
-        return userRepository.findAll();
     }
 
     public User save(User user) {
