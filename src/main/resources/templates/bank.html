@@ -13,9 +13,6 @@
     <div class="container p-5 my-5  mt-2 border border-2 rounded">
         <div class="position-relative">
             <div class=" col mb-4" th:text="'Solde: '+ ${user.balance}+ ' €'"></div>
-<!--            <div class="position-absolute top-0 end-0" >-->
-<!--                <a class="btn btn-primary" href="/user/connection" role="button">Ajouter un bénéficiaire</a>-->
-<!--            </div>-->
         </div>
         <div class="card">
             <div class="card-header">Réaliser un virement depuis sa Banque</div>
@@ -69,7 +66,7 @@
                     <li th:each="page,status:${pages}">
                         <a th:class="${status.count==currentPage? 'btn btn-secondary ms-1':'btn btn-outline- ms-1'}"
                            th:text="${status.count}"
-                           th:href="@{transfert(page=${status.count})}"></a>
+                           th:href="@{bank(page=${status.count})}"></a>
                     </li>
                 </ul>
             </div>

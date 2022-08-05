@@ -3,7 +3,6 @@ package com.application.paymybuddy.controller;
 import com.application.paymybuddy.model.BankTransaction;
 import com.application.paymybuddy.model.DTO.BankTransactionDTO;
 import com.application.paymybuddy.model.User;
-import com.application.paymybuddy.model.UserTransaction;
 import com.application.paymybuddy.service.BankTransactionService;
 import com.application.paymybuddy.service.TransfertService;
 import com.application.paymybuddy.service.UserService;
@@ -29,8 +28,6 @@ import java.util.List;
 @Controller
 @AllArgsConstructor
 public class BankTransactionController {
-
-    private TransfertService transfertService;
 
     private BankTransactionService bankTransactionService;
 
@@ -67,8 +64,8 @@ public class BankTransactionController {
         }
         User user = userService.getCurrentUser();
         int size = 5;
-        Page<UserTransaction> pageTransfert = transfertService.findPaginated(page, size);
-        List<UserTransaction> transfert = pageTransfert.getContent();
+        Page<BankTransaction> pageTransfert = bankTransactionService.findPaginated(page, size);
+        List<BankTransaction> transfert = pageTransfert.getContent();
         model.addAttribute("transfert", transfert);
         model.addAttribute("pages", new int[pageTransfert.getTotalPages()]);
         model.addAttribute("currentPage", page);
@@ -87,9 +84,8 @@ public class BankTransactionController {
 
         //Auto-mapping for same name attributes
         BankTransaction bankTransaction = modelMapper.map(bankTransactionDTO, BankTransaction.class);
-        //userDestinationId is mapped automatically by modelmapper to userTransaction.id which is bad, reset to null:
+        //userDestinationId is mapped automatically by modelmapper to bankTransactionId which is bad, reset to null:
         bankTransaction.setBankTransactionId(null);
-        //Mapping from DTO.id to Entity.User:
 
         return bankTransaction;
     }
