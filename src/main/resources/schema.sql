@@ -27,6 +27,10 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
+INSERT INTO `role` (`role`) VALUES
+	('USER'),
+	('ADMIN');
+
 
 -- -----------------------------------------------------
 -- Table `paymybuddy`.`user`
@@ -46,6 +50,10 @@ CREATE TABLE IF NOT EXISTS `paymybuddy`.`user` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
+
+INSERT INTO `user` (`firstname`, `lastname`, `username`, `email`, `balance`, `active`, `password`) VALUES
+('aimen', 'jerbi','akira', 'aimenjerbi@gmail.com', 0, 1, '$2a$10$1CqRTrB8yOLXVmAMXCHbAu08ameoCePTPenJ7Zhr1E6/.GdnbRn.u'),
+('nicolas', 'lietard','gimme', 'gimme@gmail.com', 0, 1, '$2a$10$1CqRTrB8yOLXVmAMXCHbAu08ameoCePTPenJ7Zhr1E6/.GdnbRn.u');
 
 
 -- -----------------------------------------------------
@@ -91,6 +99,10 @@ CREATE TABLE IF NOT EXISTS `paymybuddy`.`user_connection` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
+
+INSERT INTO `user_connection` (`user_source_id`, `user_destination_id`) VALUES
+(1, 2);
+
 
 
 -- -----------------------------------------------------

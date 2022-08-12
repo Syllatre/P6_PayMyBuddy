@@ -47,29 +47,29 @@ public class BankTransactionController {
         model.addAttribute("pages", new int[pageTransfert.getTotalPages()]);
         model.addAttribute("currentPage", page);
         model.addAttribute("bankTransactionDTO", bankTransactionDTO);
-        User user = userService.findByEmail(userDetails.getUsername());
-        model.addAttribute("user", user);
+        User currentUser = userService.getCurrentUser();
+        model.addAttribute("currentUser", currentUser);
         return "bank";
 
     }
 
     @Transactional
     @PostMapping("/user/bank")
-    public String postTransfert(@Valid @ModelAttribute("bankTransactionDTO") BankTransactionDTO bankTransactionDTO,
-                                @RequestParam(name = "page", required = false, defaultValue = "1") int page,
+    public String postTransfert(@RequestParam(name = "page", required = false, defaultValue = "1") int page,
+                                @ModelAttribute("bankTransactionDTO") @Valid BankTransactionDTO bankTransactionDTO,
                                 BindingResult bindingResult, Model model) {
 
         if (bindingResult.hasErrors()) {
             return "bank";
         }
-        User user = userService.getCurrentUser();
+        User currentUser = userService.getCurrentUser();
         int size = 5;
         Page<BankTransaction> pageTransfert = bankTransactionService.findPaginated(page, size);
         List<BankTransaction> transfert = pageTransfert.getContent();
         model.addAttribute("transfert", transfert);
         model.addAttribute("pages", new int[pageTransfert.getTotalPages()]);
         model.addAttribute("currentPage", page);
-        model.addAttribute("user", user);
+        model.addAttribute("currentUser", currentUser);
 
 
         BankTransaction bankTransaction = convertToEntity(bankTransactionDTO);

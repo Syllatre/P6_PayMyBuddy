@@ -42,12 +42,10 @@ public class TransfertController {
         int size = 5;
         Page<UserTransaction> pageTransfert = transfertService.findPaginated(page, size);
         List<UserTransaction> transfert = pageTransfert.getContent();
-
         model.addAttribute("transfert", transfert);
         model.addAttribute("pages", new int[pageTransfert.getTotalPages()]);
         model.addAttribute("currentPage", page);
         model.addAttribute("userTransactionDTO", userTransactionDTO);
-
         User user = userService.findByEmail(userDetails.getUsername());
         model.addAttribute("user", user);
         return "transfert";
@@ -55,9 +53,10 @@ public class TransfertController {
     }
     @Transactional
     @PostMapping("/user/transfert")
-    public String postTransfert(@Valid @ModelAttribute("userTransactionDTO") UserTransactionDTO userTransactionDTO,
+    public String postTransfert(@ModelAttribute("userTransactionDTO") @Valid UserTransactionDTO userTransactionDTO,
+                                BindingResult bindingResult,
                                 @RequestParam(name = "page", required = false, defaultValue = "1") int page,
-                                BindingResult bindingResult,Model model) {
+                                Model model) {
 
         if(bindingResult.hasErrors()) {return "transfert";}
         User user = userService.getCurrentUser();
@@ -78,20 +77,19 @@ public class TransfertController {
         }
 
         UserTransaction userTransaction = convertToEntity(userTransactionDTO, userDestination);
+
         transfertService.getTransaction(userTransaction);
 
         return "redirect:/user/transfert?success";
+
     }
 
     private UserTransaction convertToEntity(UserTransactionDTO userTransactionDTO, User userDestination) {
 
         log.debug("DTO object to Entity conversion");
 
-        //Auto-mapping for same name attributes
         UserTransaction userTransaction = modelMapper.map(userTransactionDTO, UserTransaction.class);
-        //userDestinationId is mapped automatically by modelmapper to userTransaction.id which is bad, reset to null:
         userTransaction.setUserTransactionId(null);
-        //Mapping from DTO.id to Entity.User:
         userTransaction.setUserDestination(userDestination);
 
         return userTransaction;

@@ -13,10 +13,11 @@ import java.util.Set;
 @Entity
 @Table(name = "user")
 @DynamicUpdate
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
+@ToString
 public class User {
 
     @Id
@@ -76,32 +77,4 @@ public class User {
     @NotNull
     private boolean active;
 
-    public User(String firstname, String lastname, String userName, String email, String password, BigDecimal balance, Set<Role> roles, boolean active) {
-        this.firstName = firstname;
-        this.lastName = lastname;
-        this.userName = userName;
-        this.email = email;
-        this.password = password;
-        this.balance = balance;
-        this.roles = roles;
-        this.active = active;
-    }
-
-//    @Override
-//    public String toString() {
-//        return "User{" +
-//                "userId=" + userId +
-//                ", firstName='" + firstName + '\'' +
-//                ", lastName='" + lastName + '\'' +
-//                ", userName='" + userName + '\'' +
-//                ", email='" + email + '\'' +
-//                ", password='" + password + '\'' +
-//                ", balance=" + balance +
-//                ", connections=" + connections +
-//                ", bankTransactions=" + bankTransactions +
-//                ", userTransactions=" + userTransactions +
-//                ", roles=" + roles +
-//                ", active=" + active +
-//                '}';
-//    }
 }

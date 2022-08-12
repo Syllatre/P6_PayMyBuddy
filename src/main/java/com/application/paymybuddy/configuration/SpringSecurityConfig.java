@@ -51,7 +51,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .rememberMe().tokenRepository(persistentTokenRepository())
                 .userDetailsService(userDetailsService);
-
     }
 
     @Bean
