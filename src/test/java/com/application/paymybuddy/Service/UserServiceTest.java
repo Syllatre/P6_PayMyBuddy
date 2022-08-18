@@ -1,5 +1,6 @@
-package Service;
+package com.application.paymybuddy.Service;
 
+import com.application.paymybuddy.ConfigTest.ConfigurationTest;
 import com.application.paymybuddy.model.Role;
 import com.application.paymybuddy.model.User;
 import com.application.paymybuddy.repository.RoleRepository;
@@ -8,12 +9,19 @@ import com.application.paymybuddy.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -22,7 +30,9 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
-
+@RunWith(SpringRunner.class)
+@SpringBootTest
+@ContextConfiguration
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
 
@@ -35,6 +45,7 @@ public class UserServiceTest {
 
     @Mock
     static BCryptPasswordEncoder encoder;
+
 
     User user;
     @BeforeEach
@@ -62,10 +73,14 @@ public class UserServiceTest {
         assertEquals(userExpected.getFirstName(),user1.getFirstName());
     }
 
-    @Test
-    void getCurrentUserDetailsUserNameTest() {
 
+    @Test
+    @WithMockUser(username="admin",roles={"USER","ADMIN"})
+    void getCurrentUserDetailsUserNameTest() {
+        String email=userService.getCurrentUserDetailsUserName();
+    assertEquals(email,"admin");
     }
+
 
 
     @Test
@@ -79,20 +94,11 @@ public class UserServiceTest {
     }
 
     @Test
-    void getCurrentUserTest() {
-        String email = "akira@gmail.com";
-        when(userRepository.findByEmail(email)).thenReturn(user);
-        User userResult =userService.getCurrentUser();
-
-        assertEquals(userResult,user);
-    }
-
-    @Test
     void findByIdTest() {
         Optional<User> optUser = Optional.of(user);
         when(userRepository.findById(1L)).thenReturn(optUser);
 
-        User resultUser = userService.findById(1L).get();
+        User resultUser = userService.findById(1L);
 
         assertEquals(optUser.get(),resultUser);
     }
@@ -131,18 +137,25 @@ public class UserServiceTest {
         assertEquals(userExpected.getBalance(),user1.getBalance());
     }
 
-//
-//    public String getCurrentUserDetailsUserName() {
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        if (auth != null) {
-//            Object principal = auth.getPrincipal();
-//            if (principal instanceof org.springframework.security.core.userdetails.User) {
-//                return ((org.springframework.security.core.userdetails.User) principal).getUsername();
-//            }
-//        }
-//        return null;
-//
-//    public User getCurrentUser() {
-//        return findByEmail(getCurrentUserDetailsUserName());
+//@Test
+//    void getCurrentUserTest() {
+//        User user10 = new User(null, "toto", "titi", "akira", "akira@gmail.com", "1234",new BigDecimal(0.00) , new HashSet<>(),
+//                new HashSet<>(), new HashSet<>(), new HashSet<>(), true);
+//        when(userRepository.findByEmail("akira@gmail.com")).thenReturn(user10);
+//        User userResponse = userService.getCurrentUser();
+//        assertEquals(userResponse.getUserName(),user10.getUserName());
+//    }
+
+//    @PreAuthorize("authenticated")
+//    public String getMessage() {
+//        Authentication authentication = SecurityContextHolder.getContext()
+//                .getAuthentication();
+//        return "Hello " + authentication;
+//    }
+//    @Test
+//    @WithMockUser(username="admin",roles={"USER","ADMIN"})
+//    public void getMessageWithMockUserCustomUser() {
+//        String message = getMessage();
+//    assertEquals("Hello admin",getMessage());
 //    }
 }

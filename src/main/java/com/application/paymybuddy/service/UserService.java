@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -29,18 +28,19 @@ public class UserService {
     static BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
 
-    public User createUser(User user) {
+    public void createUser(User user) {
 
         String encryptedPassword = encoder.encode(user.getPassword());
         Set<Role> roles = new HashSet<>();
         roles.add(roleRepository.findByRole("USER"));
         user.setRoles(roles);
-        user.setBalance(new BigDecimal(0.00));
+        user.setBalance(new BigDecimal("0.00"));
         user.setPassword(encryptedPassword);
         user.setActive(true);
 
-        return userRepository.save(user);
+        userRepository.save(user);
     }
+    
 
     public String getCurrentUserDetailsUserName() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -52,6 +52,7 @@ public class UserService {
         }
         return null;
     }
+
     public User findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
@@ -60,8 +61,15 @@ public class UserService {
         return findByEmail(getCurrentUserDetailsUserName());
     }
 
-    public Optional<User> findById(Long id) {
-        return userRepository.findById(id);
+    public User findById(Long id) {
+        log.debug("Calling findById({})", id);
+        Optional<User> optuser = userRepository.findById(id);
+        if (optuser.isEmpty()) {
+            return null;
+        }
+
+        return optuser.get();
+
     }
 
     public Boolean existsByEmail(String email) {
@@ -72,7 +80,7 @@ public class UserService {
         return userRepository.existsByUsername(userName);
     }
 
-    public User save(User user) {
-        return userRepository.save(user);
+    public void save(User user) {
+        userRepository.save(user);
     }
 }

@@ -16,20 +16,6 @@ DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
 
--- -----------------------------------------------------
--- Table `paymybuddy`.`role`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `paymybuddy`.`role` (
-  `role_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `role` VARCHAR(50) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_0900_ai_ci' NOT NULL,
-  PRIMARY KEY (`role_id`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
-
-INSERT INTO `role` (`role`) VALUES
-	('USER'),
-	('ADMIN');
 
 
 -- -----------------------------------------------------
@@ -51,10 +37,24 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
-INSERT INTO `user` (`firstname`, `lastname`, `username`, `email`, `balance`, `active`, `password`) VALUES
-('aimen', 'jerbi','akira', 'aimenjerbi@gmail.com', 0, 1, '$2a$10$1CqRTrB8yOLXVmAMXCHbAu08ameoCePTPenJ7Zhr1E6/.GdnbRn.u'),
-('nicolas', 'lietard','gimme', 'gimme@gmail.com', 0, 1, '$2a$10$1CqRTrB8yOLXVmAMXCHbAu08ameoCePTPenJ7Zhr1E6/.GdnbRn.u');
+INSERT IGNORE INTO `user` (`firstname`, `lastname`, `username`, `email`, `balance`, `active`, `password`) VALUES
+('aimen', 'jerbi','akira', 'aimenjerbi@gmail.com', 0.00, 1, '$2a$10$1CqRTrB8yOLXVmAMXCHbAu08ameoCePTPenJ7Zhr1E6/.GdnbRn.u'),
+('nicolas', 'lietard','gimme', 'gimme@gmail.com', 0.00, 1, '$2a$10$1CqRTrB8yOLXVmAMXCHbAu08ameoCePTPenJ7Zhr1E6/.GdnbRn.u');
 
+-- -----------------------------------------------------
+-- Table `paymybuddy`.`role`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `paymybuddy`.`role` (
+  `role_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `role` VARCHAR(50) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_0900_ai_ci' NOT NULL,
+  PRIMARY KEY (`role_id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+INSERT IGNORE INTO `role` (`role`) VALUES
+	('USER'),
+	('ADMIN');
 
 -- -----------------------------------------------------
 -- Table `paymybuddy`.`transactions_bank`
@@ -78,6 +78,7 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
+
 -- Table `paymybuddy`.`user_connection`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `paymybuddy`.`user_connection` (
@@ -99,9 +100,6 @@ CREATE TABLE IF NOT EXISTS `paymybuddy`.`user_connection` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
-
-INSERT INTO `user_connection` (`user_source_id`, `user_destination_id`) VALUES
-(1, 2);
 
 
 
@@ -128,6 +126,8 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
+INSERT IGNORE INTO `user_roles` (`user_id`, `role_id`) VALUES
+(1, 1), (2,1);
 
 -- -----------------------------------------------------
 -- Table `paymybuddy`.`user_transaction`

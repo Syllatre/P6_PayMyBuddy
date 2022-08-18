@@ -2,6 +2,7 @@ package com.application.paymybuddy.controller;
 
 import com.application.paymybuddy.model.BankTransaction;
 import com.application.paymybuddy.model.DTO.BankTransactionDTO;
+import com.application.paymybuddy.model.DTO.UserTransactionDTO;
 import com.application.paymybuddy.model.User;
 import com.application.paymybuddy.service.BankTransactionService;
 import com.application.paymybuddy.service.TransfertService;
@@ -37,31 +38,29 @@ public class BankTransactionController {
 
 
     @GetMapping("/user/bank")
-    public String findPaginated(@ModelAttribute("bankTransactionDTO") BankTransactionDTO bankTransactionDTO, Model model,
-                                @RequestParam(name = "page", required = false, defaultValue = "1") int page,
-                                @AuthenticationPrincipal UserDetails userDetails) {
+    public String findPaginated(@RequestParam(name = "page", required = false, defaultValue = "1") int page,
+                                Model model) {
         int size = 5;
+        User currentUser = userService.getCurrentUser();
         Page<BankTransaction> pageTransfert = bankTransactionService.findPaginated(page, size);
         List<BankTransaction> transfert = pageTransfert.getContent();
         model.addAttribute("transfert", transfert);
         model.addAttribute("pages", new int[pageTransfert.getTotalPages()]);
         model.addAttribute("currentPage", page);
-        model.addAttribute("bankTransactionDTO", bankTransactionDTO);
-        User currentUser = userService.getCurrentUser();
         model.addAttribute("currentUser", currentUser);
+
+        BankTransactionDTO bankTransactionDTO = new BankTransactionDTO();
+        model.addAttribute("bankTransactionDTO", bankTransactionDTO);
         return "bank";
 
     }
 
     @Transactional
     @PostMapping("/user/bank")
-    public String postTransfert(@RequestParam(name = "page", required = false, defaultValue = "1") int page,
-                                @ModelAttribute("bankTransactionDTO") @Valid BankTransactionDTO bankTransactionDTO,
-                                BindingResult bindingResult, Model model) {
-
-        if (bindingResult.hasErrors()) {
-            return "bank";
-        }
+    public String postTransfert(@Valid @ModelAttribute("bankTransactionDTO")BankTransactionDTO bankTransactionDTO,
+                                BindingResult bindingResult,
+                                @RequestParam(name = "page", required = false, defaultValue = "1") int page,
+                                Model model) {
         User currentUser = userService.getCurrentUser();
         int size = 5;
         Page<BankTransaction> pageTransfert = bankTransactionService.findPaginated(page, size);
@@ -70,6 +69,10 @@ public class BankTransactionController {
         model.addAttribute("pages", new int[pageTransfert.getTotalPages()]);
         model.addAttribute("currentPage", page);
         model.addAttribute("currentUser", currentUser);
+
+        if (bindingResult.hasErrors()) {
+            return "bank";
+        }
 
 
         BankTransaction bankTransaction = convertToEntity(bankTransactionDTO);

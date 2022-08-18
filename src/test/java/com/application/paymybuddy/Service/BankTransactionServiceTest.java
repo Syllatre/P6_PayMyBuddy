@@ -1,4 +1,4 @@
-package Service;
+package com.application.paymybuddy.Service;
 
 import com.application.paymybuddy.model.BankTransaction;
 import com.application.paymybuddy.model.User;

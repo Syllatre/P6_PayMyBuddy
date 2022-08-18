@@ -24,6 +24,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private UserDetailsService userDetailsService;
 
+
     private DataSource dataSource;
 
 
@@ -49,8 +50,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/login?logout")
                 .permitAll()
                 .and()
-                .rememberMe().tokenRepository(persistentTokenRepository())
-                .userDetailsService(userDetailsService);
+                .rememberMe().tokenRepository(persistentTokenRepository());
+//                .userDetailsService(userDetailsService);
     }
 
     @Bean
@@ -72,19 +73,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder.authenticationProvider(daoAuthenticationProvider());
     }
-
-
-//    public void configureGlobal(AuthenticationManagerBuilder auth)
-//            throws Exception {
-//        auth.jdbcAuthentication()
-//                .dataSource(dataSource)
-//                .usersByUsernameQuery("select email,password,active "
-//                        + "from user "
-//                        + "where email = ?")
-//                .authoritiesByUsernameQuery("select email,authority "
-//                        + "from authorities "
-//                        + "where email = ?");
-//    }
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {

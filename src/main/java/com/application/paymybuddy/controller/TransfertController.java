@@ -36,38 +36,43 @@ public class TransfertController {
 
 
     @GetMapping("/user/transfert")
-    public String findPaginated(@ModelAttribute("userTransactionDTO") UserTransactionDTO userTransactionDTO, Model model,
-                                @RequestParam(name = "page", required = false, defaultValue = "1") int page,
-                                @AuthenticationPrincipal UserDetails userDetails) {
+    public String findPaginated(@RequestParam(name = "page", required = false, defaultValue = "1") int page,
+                                @AuthenticationPrincipal UserDetails userDetails,
+                                Model model) {
         int size = 5;
         Page<UserTransaction> pageTransfert = transfertService.findPaginated(page, size);
         List<UserTransaction> transfert = pageTransfert.getContent();
+        UserTransactionDTO userTransactionDTO = new UserTransactionDTO();
         model.addAttribute("transfert", transfert);
         model.addAttribute("pages", new int[pageTransfert.getTotalPages()]);
         model.addAttribute("currentPage", page);
-        model.addAttribute("userTransactionDTO", userTransactionDTO);
         User user = userService.findByEmail(userDetails.getUsername());
         model.addAttribute("user", user);
+        model.addAttribute("userTransactionDTO",userTransactionDTO);
         return "transfert";
 
     }
     @Transactional
     @PostMapping("/user/transfert")
-    public String postTransfert(@ModelAttribute("userTransactionDTO") @Valid UserTransactionDTO userTransactionDTO,
+    public String postTransfert( @Valid @ModelAttribute("userTransactionDTO") UserTransactionDTO userTransactionDTO,
                                 BindingResult bindingResult,
                                 @RequestParam(name = "page", required = false, defaultValue = "1") int page,
                                 Model model) {
-
-        if(bindingResult.hasErrors()) {return "transfert";}
-        User user = userService.getCurrentUser();
-        User userDestination = userService.findById(userTransactionDTO.getUserDestinationId()).get();
+        User userDestination = userService.findById(userTransactionDTO.getUserDestinationId());
         int size = 5;
         Page<UserTransaction> pageTransfert = transfertService.findPaginated(page, size);
         List<UserTransaction> transfert = pageTransfert.getContent();
         model.addAttribute("transfert", transfert);
         model.addAttribute("pages", new int[pageTransfert.getTotalPages()]);
         model.addAttribute("currentPage", page);
+        User user =userService.getCurrentUser();
         model.addAttribute("user", user);
+        if(bindingResult.hasErrors()) {return "transfert";}
+
+    if (!user.getConnections().contains(userDestination)){
+            log.debug("Failure: unknown buddy");
+            bindingResult.rejectValue("userDestinationId", "userDestinationNotABuddy", "Veuillez selectionner un beneficaire");
+            return "transfert";}
 
         int validation = user.getBalance().compareTo(userTransactionDTO.getAmount());
 

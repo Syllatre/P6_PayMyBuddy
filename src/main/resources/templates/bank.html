@@ -12,7 +12,7 @@
 <div layout:fragment="content1">
     <div class="container p-5 my-5  mt-2 border border-2 rounded">
         <div class="position-relative">
-            <div class=" col mb-4" th:text="'Solde: '+ ${currentUser.balance}+ ' €'"></div>
+            <div class=" col mb-4" th:text="'Solde: '+ ${currentUser?.balance}+ ' €'"></div>
         </div>
         <div class="card">
             <div class="card-header">Réaliser un virement depuis sa Banque</div>

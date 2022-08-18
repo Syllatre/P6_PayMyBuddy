@@ -10,8 +10,8 @@ import java.math.BigDecimal;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class UserTransactionDTO implements Serializable {
 
     @NotNull
