@@ -4,7 +4,6 @@ import com.application.paymybuddy.model.User;
 import com.application.paymybuddy.model.UserTransaction;
 import com.application.paymybuddy.repository.TransfertRepository;
 import com.application.paymybuddy.repository.UserRepository;
-import com.application.paymybuddy.service.LocalDateTimeService;
 import com.application.paymybuddy.service.TransfertService;
 import com.application.paymybuddy.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,12 +18,9 @@ import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -41,8 +37,6 @@ public class TransfertServiceTest {
     @Mock
     private UserService userService;
     @Mock
-    private LocalDateTimeService localDateTimeService;
-    @Mock
     private UserRepository userRepository;
 
     User user;
@@ -56,7 +50,6 @@ public class TransfertServiceTest {
      void init(){
          user = new User(1L, "toto", "titi", "akira", "akira@gmail.com", "1234", new BigDecimal(1000.0), new HashSet<>(),
                  new HashSet<>(), new HashSet<>(), new HashSet<>(), true);
-         now = LocalDateTime.of(2022, Month.AUGUST, 2, 10, 33, 48);
 
          user1 = new User(2L, "sif", "kessi", "hades", "hades@gmail.com", "1234", new BigDecimal(10.0), new HashSet<>(),
                  new HashSet<>(), new HashSet<>(), new HashSet<>(), true);
@@ -90,7 +83,6 @@ public class TransfertServiceTest {
     void getTransactionTest(){
         when(userService.getCurrentUser()).thenReturn(user);
         when(transfertRepository.save(userTransaction1)).thenReturn(userTransaction1);
-        when(localDateTimeService.now()).thenReturn(now);
         when(userRepository.findByEmail("akira@gmail.com")).thenReturn(user);
         when(userRepository.findByEmail("hades@gmail.com")).thenReturn(user1);
         when(userRepository.save(user)).thenReturn(user);

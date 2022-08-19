@@ -5,7 +5,6 @@ import com.application.paymybuddy.model.User;
 import com.application.paymybuddy.repository.BankTransactionRepository;
 import com.application.paymybuddy.repository.UserRepository;
 import com.application.paymybuddy.service.BankTransactionService;
-import com.application.paymybuddy.service.LocalDateTimeService;
 import com.application.paymybuddy.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,9 +42,6 @@ public class BankTransactionServiceTest {
     @Mock
     private BankTransactionRepository bankTransactionRepository;
 
-    @Mock
-    private LocalDateTimeService localDateTimeService;
-
     User user;
     LocalDateTime now;
     BankTransaction bankTransaction;
@@ -62,7 +58,6 @@ public class BankTransactionServiceTest {
     @Test
     void getTransactionTest() {
         when(userService.getCurrentUser()).thenReturn(user);
-        when(localDateTimeService.now()).thenReturn(now);
         when(bankTransactionRepository.save(bankTransaction)).thenReturn(bankTransaction);
         when(userRepository.save(user)).thenReturn(user);
 
@@ -90,11 +85,5 @@ public class BankTransactionServiceTest {
         assertEquals(pageBank.getTotalPages(), 1);
         assertTrue(pageBank.getContent().stream().anyMatch(o -> o.getBankAccountNumber().equals("45458595")));
         assertTrue(pageBank.getContent().stream().anyMatch(o -> o.getUser().getFirstName().equals("toto")));
-    }
-    @Test
-    void localDateTimeServiceTest(){
-        when(localDateTimeService.now()).thenReturn(now);
-        LocalDateTime test = localDateTimeService.now();
-        assertEquals(test,now);
     }
 }

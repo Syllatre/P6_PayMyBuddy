@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @Service
@@ -18,7 +19,6 @@ public class TransfertService {
 
     private TransfertRepository transfertRepository;
     private UserService userService;
-    private LocalDateTimeService localDateTimeService;
     private UserRepository userRepository;
 
     public Page<UserTransaction> findPaginated(int pageNumber, int size) {
@@ -34,7 +34,7 @@ public class TransfertService {
         userTransaction.setUserSource(userService.getCurrentUser());
 
         userTransaction.setFees(getFees(userTransaction.getAmount()));
-        userTransaction.setDateUserTransaction(localDateTimeService.now());
+        userTransaction.setDateUserTransaction(LocalDateTime.now());
         transfertRepository.save(userTransaction);
 
 

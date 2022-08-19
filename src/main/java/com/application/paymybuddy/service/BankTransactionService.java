@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Slf4j
 @Service
@@ -23,7 +24,6 @@ public class BankTransactionService {
 
     private BankTransactionRepository bankTransactionRepository;
 
-    private LocalDateTimeService localDateTimeService;
 
     public Page<BankTransaction> findPaginated(int pageNumber, int size) {
         Pageable pageable = PageRequest.of(pageNumber - 1, size);
@@ -38,7 +38,7 @@ public class BankTransactionService {
         // creation de l'objet transaction
         User user = userService.getCurrentUser();
         bankTransaction.setUser(user);
-        bankTransaction.setDatetime(localDateTimeService.now());
+        bankTransaction.setDatetime(LocalDateTime.now());
         bankTransactionRepository.save(bankTransaction);
         log.debug("transaction save");
 

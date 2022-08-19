@@ -21,9 +21,10 @@ public class ConfigurationTest {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        User basicUser = new User("aimenjerbi@gmail.com", "1234", Arrays.asList(new SimpleGrantedAuthority("ROLE_USER")));
+        User basicUser = new User("aimenjerbi@gmail.com", "$2a$10$1CqRTrB8yOLXVmAMXCHbAu08ameoCePTPenJ7Zhr1E6/.GdnbRn.u", Arrays.asList(new SimpleGrantedAuthority("ROLE_USER")));
         return new InMemoryUserDetailsManager(Arrays.asList(basicUser));
     }
+
 
     @Bean
     public ModelMapper modelMapper() {

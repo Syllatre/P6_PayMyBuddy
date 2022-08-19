@@ -67,12 +67,13 @@ public class TransfertController {
         model.addAttribute("currentPage", page);
         User user =userService.getCurrentUser();
         model.addAttribute("user", user);
-        if(bindingResult.hasErrors()) {return "transfert";}
+
 
     if (!user.getConnections().contains(userDestination)){
             log.debug("Failure: unknown buddy");
-            bindingResult.rejectValue("userDestinationId", "userDestinationNotABuddy", "Veuillez selectionner un beneficaire");
+            bindingResult.rejectValue("userDestinationId", "userDestinationNotABuddy", "Veuillez sélectionner un bénéficiaire");
             return "transfert";}
+        if(bindingResult.hasErrors()) {return "transfert";}
 
         int validation = user.getBalance().compareTo(userTransactionDTO.getAmount());
 

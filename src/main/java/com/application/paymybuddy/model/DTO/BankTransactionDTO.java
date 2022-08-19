@@ -21,7 +21,7 @@ public class BankTransactionDTO implements Serializable {
     @NotBlank
     private String bankAccountNumber;
 
-    @Positive
+    @Positive(message = "veuillez saisir un nombre positif")
     @NotNull
     private BigDecimal amount;
 }

@@ -6,6 +6,7 @@ import com.application.paymybuddy.model.User;
 import com.application.paymybuddy.repository.RoleRepository;
 import com.application.paymybuddy.repository.UserRepository;
 import com.application.paymybuddy.service.UserService;
+import org.hibernate.query.criteria.internal.predicate.IsEmptyPredicate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,7 +31,7 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
-@RunWith(SpringRunner.class)
+
 @SpringBootTest
 @ContextConfiguration
 @ExtendWith(MockitoExtension.class)
@@ -56,10 +57,10 @@ public class UserServiceTest {
 
     @Test
     void createUserTest(){
-        User user1 = new User(null, "toto", "titi", "akira", "akira@gmail.com", "1234",new BigDecimal(0.00) , new HashSet<>(),
+        User user1 = new User(null, "toto", "titi", "akira", "akira@gmail.com", "1234",new BigDecimal("0.00") , new HashSet<>(),
                 new HashSet<>(), new HashSet<>(), new HashSet<>(), true);
 
-        User userExpected = new User(null, "toto", "titi", "akira", "akira@gmail.com", "1234encrypted",new BigDecimal(0.00) , new HashSet<>(),
+        User userExpected = new User(null, "toto", "titi", "akira", "akira@gmail.com", "1234encrypted",new BigDecimal("0.00") , new HashSet<>(),
                 new HashSet<>(), new HashSet<>(), new HashSet<>(), true);
         HashSet<Role> hashsetRole = new HashSet<>();
         hashsetRole.add(new Role(1L,"USER"));
@@ -75,13 +76,12 @@ public class UserServiceTest {
 
 
     @Test
-    @WithMockUser(username="admin",roles={"USER","ADMIN"})
+    @WithMockUser(username="admin")
     void getCurrentUserDetailsUserNameTest() {
         String email=userService.getCurrentUserDetailsUserName();
+        System.out.println(email);
     assertEquals(email,"admin");
     }
-
-
 
     @Test
     void findByEmailTest() {
@@ -101,6 +101,15 @@ public class UserServiceTest {
         User resultUser = userService.findById(1L);
 
         assertEquals(optUser.get(),resultUser);
+    }
+    @Test
+    void findByIdNullTest() {
+        Optional<User> optUser = Optional.of(user);
+        when(userRepository.findById(1L)).thenReturn(Optional.empty());
+
+        User resultUser = userService.findById(1L);
+
+        assertEquals(resultUser,null);
     }
 
     @Test
@@ -137,25 +146,13 @@ public class UserServiceTest {
         assertEquals(userExpected.getBalance(),user1.getBalance());
     }
 
-//@Test
-//    void getCurrentUserTest() {
-//        User user10 = new User(null, "toto", "titi", "akira", "akira@gmail.com", "1234",new BigDecimal(0.00) , new HashSet<>(),
-//                new HashSet<>(), new HashSet<>(), new HashSet<>(), true);
-//        when(userRepository.findByEmail("akira@gmail.com")).thenReturn(user10);
-//        User userResponse = userService.getCurrentUser();
-//        assertEquals(userResponse.getUserName(),user10.getUserName());
-//    }
-
-//    @PreAuthorize("authenticated")
-//    public String getMessage() {
-//        Authentication authentication = SecurityContextHolder.getContext()
-//                .getAuthentication();
-//        return "Hello " + authentication;
-//    }
-//    @Test
-//    @WithMockUser(username="admin",roles={"USER","ADMIN"})
-//    public void getMessageWithMockUserCustomUser() {
-//        String message = getMessage();
-//    assertEquals("Hello admin",getMessage());
-//    }
+    @Test
+    @WithMockUser(username="akira@gmail.com")
+    void getCurrentUserTest() {
+        User user10 = new User(null, "toto", "titi", "akira", "akira@gmail.com", "1234",new BigDecimal(0.00) , new HashSet<>(),
+                new HashSet<>(), new HashSet<>(), new HashSet<>(), true);
+        when(userRepository.findByEmail("akira@gmail.com")).thenReturn(user10);
+        User userResponse = userService.getCurrentUser();
+        assertEquals(userResponse.getUserName(),user10.getUserName());
+    }
 }
