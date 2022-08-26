@@ -10,20 +10,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MockMvcBuilder;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -31,9 +25,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -42,11 +35,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(ConfigurationTest.class)
 public class BankTransactionControllerTest {
 
-@Autowired
-    private MockMvc mockMvc;
-
     @Autowired
-     private WebApplicationContext context;
+    private MockMvc mockMvc;
 
     @MockBean
     private BankTransactionService bankTransactionService;
@@ -70,9 +60,9 @@ public class BankTransactionControllerTest {
 
         BankTransaction[] bankTransactionArray = {bankTransaction1, bankTransaction2, bankTransaction3};
         List<BankTransaction> bankTransactions = Arrays.asList(bankTransactionArray);
-        Pageable pageable = PageRequest.of(1,3);
+        Pageable pageable = PageRequest.of(1, 5);
 
-        pageTransfert = new PageImpl<>(bankTransactions,pageable,3);
+        pageTransfert = new PageImpl<>(bankTransactions, pageable, 3);
 
     }
 
@@ -81,7 +71,7 @@ public class BankTransactionControllerTest {
     void GetBankTransaction_shouldSucceed() throws Exception {
         //ARRANGE
         when(userService.getCurrentUser()).thenReturn(user1);
-        when(bankTransactionService.findPaginated(1,5)).thenReturn(pageTransfert);
+        when(bankTransactionService.findPaginated(1, 5)).thenReturn(pageTransfert);
 
         //ACT+ASSERT
         mockMvc.perform(get("/user/bank"))
@@ -95,15 +85,39 @@ public class BankTransactionControllerTest {
                 .andExpect(model().attributeExists("currentPage"));
     }
 
-//    @Test
-//    void addFireStation() throws Exception {
-//        FireStationDto inputFireStation = new FireStationDto();
-//        inputFireStation.setStation("10");
-//        inputFireStation.setAddress("rue des tourbillons");
-//        Mockito.when(fireStationService.saveFireStation(fireStation)).thenReturn(fireStation);
-//        mockMvc.perform(post("/firestation")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(new ObjectMapper().writeValueAsString(inputFireStation)))
-//                .andExpect(status().isOk());
-//    }
+    @WithUserDetails("aimenjerbi@gmail.com")
+    @Test
+    void PostBankTransaction_SendMoneyShouldSucceedAndRedirected() throws Exception {
+        BigDecimal transactionAmount = new BigDecimal("33");
+
+
+        when(userService.getCurrentUser()).thenReturn(user1);
+        when(bankTransactionService.findPaginated(1, 5)).thenReturn(pageTransfert);
+        when((bankTransactionService.getTransaction(bankTransaction1))).thenReturn(bankTransaction1);
+
+        mockMvc.perform(post("/user/bank")
+                        .param("amount", transactionAmount.toString())
+                        .param("bankAccountNumber", "1234")
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/user/bank?success"));
+    }
+
+    @WithUserDetails("aimenjerbi@gmail.com")
+    @Test
+    void PostBankTransaction_ErrorArgument() throws Exception {
+        BigDecimal transactionAmount = new BigDecimal("33");
+
+        when(userService.getCurrentUser()).thenReturn(user1);
+        when(bankTransactionService.findPaginated(1, 5)).thenReturn(pageTransfert);
+        when((bankTransactionService.getTransaction(bankTransaction1))).thenReturn(bankTransaction1);
+
+
+        mockMvc.perform(post("/user/bank")
+                        .param("amount", transactionAmount.toString())
+                        .param("bankAccountNumber", "")
+                        .with(csrf()))
+                        .andExpect((model().errorCount(1)))
+                        .andExpect(status().isOk());
+    }
 }

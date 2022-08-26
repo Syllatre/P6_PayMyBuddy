@@ -1,7 +1,6 @@
 package com.application.paymybuddy.Controller;
 
 import com.application.paymybuddy.ConfigTest.ConfigurationTest;
-import com.application.paymybuddy.controller.BankTransactionController;
 import com.application.paymybuddy.controller.RegisterController;
 import com.application.paymybuddy.service.UserService;
 import org.junit.jupiter.api.Test;
@@ -17,7 +16,6 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
 @WebMvcTest(RegisterController.class)
 @Import(ConfigurationTest.class)

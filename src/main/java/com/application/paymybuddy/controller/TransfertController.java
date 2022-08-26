@@ -9,8 +9,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -36,9 +34,8 @@ public class TransfertController {
 
 
     @GetMapping("/user/transfert")
-    public String findPaginated(@RequestParam(name = "page", required = false, defaultValue = "1") int page,
-                                @AuthenticationPrincipal UserDetails userDetails,
-                                Model model) {
+    public String findPaginated(@RequestParam(name = "page", required = false, defaultValue = "1") int page, Model model) {
+
         int size = 5;
         Page<UserTransaction> pageTransfert = transfertService.findPaginated(page, size);
         List<UserTransaction> transfert = pageTransfert.getContent();
@@ -46,15 +43,16 @@ public class TransfertController {
         model.addAttribute("transfert", transfert);
         model.addAttribute("pages", new int[pageTransfert.getTotalPages()]);
         model.addAttribute("currentPage", page);
-        User user = userService.findByEmail(userDetails.getUsername());
+        User user = userService.getCurrentUser();
         model.addAttribute("user", user);
-        model.addAttribute("userTransactionDTO",userTransactionDTO);
+        model.addAttribute("userTransactionDTO", userTransactionDTO);
         return "transfert";
 
     }
+
     @Transactional
     @PostMapping("/user/transfert")
-    public String postTransfert( @Valid @ModelAttribute("userTransactionDTO") UserTransactionDTO userTransactionDTO,
+    public String postTransfert(@Valid @ModelAttribute("userTransactionDTO") UserTransactionDTO userTransactionDTO,
                                 BindingResult bindingResult,
                                 @RequestParam(name = "page", required = false, defaultValue = "1") int page,
                                 Model model) {
@@ -65,15 +63,18 @@ public class TransfertController {
         model.addAttribute("transfert", transfert);
         model.addAttribute("pages", new int[pageTransfert.getTotalPages()]);
         model.addAttribute("currentPage", page);
-        User user =userService.getCurrentUser();
+        User user = userService.getCurrentUser();
         model.addAttribute("user", user);
 
 
-    if (!user.getConnections().contains(userDestination)){
+        if (!user.getConnections().contains(userDestination)) {
             log.debug("Failure: unknown buddy");
             bindingResult.rejectValue("userDestinationId", "userDestinationNotABuddy", "Veuillez sélectionner un bénéficiaire");
-            return "transfert";}
-        if(bindingResult.hasErrors()) {return "transfert";}
+            return "transfert";
+        }
+        if (bindingResult.hasErrors()) {
+            return "transfert";
+        }
 
         int validation = user.getBalance().compareTo(userTransactionDTO.getAmount());
 
