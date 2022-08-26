@@ -42,7 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(ConfigurationTest.class)
 public class BankTransactionControllerTest {
 
-
+@Autowired
     private MockMvc mockMvc;
 
     @Autowired
@@ -70,7 +70,7 @@ public class BankTransactionControllerTest {
 
         BankTransaction[] bankTransactionArray = {bankTransaction1, bankTransaction2, bankTransaction3};
         List<BankTransaction> bankTransactions = Arrays.asList(bankTransactionArray);
-        Pageable pageable = PageRequest.of(1,5);
+        Pageable pageable = PageRequest.of(1,3);
 
         pageTransfert = new PageImpl<>(bankTransactions,pageable,3);
 
@@ -85,14 +85,14 @@ public class BankTransactionControllerTest {
 
         //ACT+ASSERT
         mockMvc.perform(get("/user/bank"))
-                .andExpect(status().isOk());
-//                .andExpect(view().name("/user/bank"))
-//                .andExpect(model().size(3))
-//                .andExpect(model().attributeExists("currentUser"))
-//                .andExpect(model().attributeExists("bankTransactionDTO"))
-//                .andExpect(model().attributeExists("transfert"))
-//                .andExpect(model().attributeExists("pages"))
-//                .andExpect(model().attributeExists("currentPage"));
+                .andExpect(status().isOk())
+                .andExpect(view().name("bank"))
+                .andExpect(model().size(5))
+                .andExpect(model().attributeExists("currentUser"))
+                .andExpect(model().attributeExists("bankTransactionDTO"))
+                .andExpect(model().attributeExists("transfert"))
+                .andExpect(model().attributeExists("pages"))
+                .andExpect(model().attributeExists("currentPage"));
     }
 
 //    @Test
