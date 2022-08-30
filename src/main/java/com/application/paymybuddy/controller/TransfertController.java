@@ -72,14 +72,14 @@ public class TransfertController {
             bindingResult.rejectValue("userDestinationId", "userDestinationNotABuddy", "Veuillez sélectionner un bénéficiaire");
             return "transfert";
         }
-        if (bindingResult.hasErrors()) {
-            return "transfert";
-        }
 
         int validation = user.getBalance().compareTo(userTransactionDTO.getAmount());
 
         if (validation < 0) {
             bindingResult.rejectValue("amount", "insufficientBalance", "Votre solde est insuffisant");
+            return "transfert";
+        }
+        if (bindingResult.hasErrors()) {
             return "transfert";
         }
 

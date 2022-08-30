@@ -87,7 +87,7 @@ public class TransfertControllerTest {
     }
 
 
-    @WithUserDetails("aimenjerbi@gmail.com") //user from SpringSecurityWebTestConfig.class
+    @WithUserDetails("aimenjerbi@gmail.com")
     @Test
     void GetUserTransaction_shouldSucceed() throws Exception {
         when(userService.getCurrentUser()).thenReturn(user1);
@@ -105,27 +105,27 @@ public class TransfertControllerTest {
                 .andExpect(model().attributeExists("currentPage"));
     }
 
-//    @WithUserDetails("aimenjerbi@gmail.com")
-//    @Test
-//    void PostTransfert_SendMoneyShouldSucceedAndRedirected() throws Exception {
-//        user1.getConnections().add(user2);
-//        BigDecimal transactionAmount = new BigDecimal("33");
-//        Long userDestinationId = 2L;
-//
-//        when(userService.getCurrentUser()).thenReturn(user1);
-//        when(userService.findById(2L)).thenReturn(user2);
-//        when(transfertService.findPaginated(1, 5)).thenReturn(pageTransfert);
-//        when(transfertService.getTransaction(userTransaction1)).thenReturn(userTransaction1);
-//
-//
-//        mockMvc.perform(post("/user/transfert")
-//                        .param("userDestinationId", userDestinationId.toString())
-//                        .param("amount", transactionAmount.toString())
-//                        .param("comment", "velo")
-//                        .with(csrf()))
-//                .andExpect(status().is3xxRedirection())
-//                .andExpect(redirectedUrl("/user/transfert?success"));
-//    }
+    @WithUserDetails("aimenjerbi@gmail.com")
+    @Test
+    void PostTransfert_SendMoneyShouldSucceedAndRedirected() throws Exception {
+        user1.getConnections().add(user2);
+        BigDecimal transactionAmount = new BigDecimal("33");
+        Long userDestinationId = 2L;
+
+        when(userService.getCurrentUser()).thenReturn(user1);
+        when(userService.findById(2L)).thenReturn(user2);
+        when(transfertService.findPaginated(1, 5)).thenReturn(pageTransfert);
+        when(transfertService.getTransaction(userTransaction1)).thenReturn(userTransaction1);
+
+
+        mockMvc.perform(post("/user/transfert")
+                        .param("userDestinationId", userDestinationId.toString())
+                        .param("amount", transactionAmount.toString())
+                        .param("comments", "velo")
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/user/transfert?success"));
+    }
 
     @WithUserDetails("aimenjerbi@gmail.com")
     @Test
@@ -157,7 +157,7 @@ public class TransfertControllerTest {
         Long userDestinationId = 0L;
 
         when(userService.getCurrentUser()).thenReturn(user1);
-        when(userService.findById(0L)).thenReturn(user3);
+        when(userService.findById(0L)).thenReturn(user2);
         when(transfertService.findPaginated(1, 5)).thenReturn(pageTransfert);
         when(transfertService.getTransaction(userTransaction1)).thenReturn(userTransaction1);
 
@@ -167,8 +167,8 @@ public class TransfertControllerTest {
                         .param("amount", transactionAmount.toString())
                         .param("comment", "velo")
                         .with(csrf()))
-                .andExpect((model().errorCount(1)))
-                .andExpect(status().isOk());
+                .andExpect((model().errorCount(2)))
+                .andExpect(model().attributeHasFieldErrorCode("userTransactionDTO", "userDestinationId", "userDestinationNotABuddy"));
     }
 
     @WithUserDetails("aimenjerbi@gmail.com")
@@ -176,8 +176,9 @@ public class TransfertControllerTest {
     void PostTransfert_ErrorWithInsufficientBalance() throws Exception {
         user1.getConnections().add(user3);
         BigDecimal transactionAmount = new BigDecimal("200");
-        Long userDestinationId = 3L;
 
+        Long userDestinationId = 3L;
+        UserTransactionDTO  test = new UserTransactionDTO(userDestinationId,transactionAmount,"velo");
         when(userService.getCurrentUser()).thenReturn(user1);
         when(userService.findById(3L)).thenReturn(user3);
         when(transfertService.findPaginated(1, 5)).thenReturn(pageTransfert);
@@ -189,8 +190,8 @@ public class TransfertControllerTest {
                         .param("amount", transactionAmount.toString())
                         .param("comment", "velo")
                         .with(csrf()))
-                .andExpect((model().errorCount(1)))
-                .andExpect(status().isOk());
+                .andExpect((model().errorCount(2)))
+                .andExpect(model().attributeHasFieldErrorCode("userTransactionDTO", "amount", "insufficientBalance"));
     }
 
 }

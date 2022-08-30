@@ -26,17 +26,15 @@ public class ConnectionController {
     private ConnectionService connectionService;
 
     @GetMapping("/user/connection")
-    public String findPaginated(Model model,
-                                @RequestParam(name = "page", required = false, defaultValue = "1") int page,
-                                @AuthenticationPrincipal UserDetails userDetails) {
+    public String findPaginated(Model model, @RequestParam(name = "page", required = false, defaultValue = "1") int page) {
         int size = 5;
         Page<User> pageConnection = connectionService.getAllConnectionByCurrentUser(page, size);
         List<User> connection = pageConnection.getContent();
-        connection.forEach(System.out::println);
+//        connection.forEach(System.out::println);
         model.addAttribute("connection", connection);
         model.addAttribute("pages", new int[pageConnection.getTotalPages()]);
         model.addAttribute("currentPage", page);
-        User user = userService.findByEmail(userDetails.getUsername());
+        User user = userService.getCurrentUser();
         return "connection";
 
     }
