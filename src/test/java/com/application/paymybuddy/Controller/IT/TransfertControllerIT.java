@@ -16,25 +16,18 @@ import org.springframework.test.web.servlet.MockMvc;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-//We need to use @Transactional here because otherwise we get LazyInitializationException due to User.roles/banktransactions/connections are FetchType.LAZY
-//Session does not exist in test context, @Transactional creates a session context, this way we can fetch lazily roles/banktransactions/connections
-//https://stackoverflow.com/questions/19813492/getting-lazyinitializationexception-on-junit-test-case#answer-20985746
-//Another solution would be to use FetchType.EAGER, but THIS HAS A NEGATIVE IMPACT:
-//it can lead to performance issues in the real application, explanations here: https://vladmihalcea.com/eager-fetching-is-a-code-smell
-//NOTE: @Transactional creates a new transaction that is by default automatically ROLLED BACK after test completion.
 @Transactional
 class TransfertControllerIT {
 
-
     @Autowired
-    private MockMvc mvc;
+    MockMvc mvc;
 
     @Autowired
     private UserService userservice;
@@ -51,9 +44,34 @@ class TransfertControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "aimenjerbi@gmail.com",password = "$2a$10$1CqRTrB8yOLXVmAMXCHbAu08ameoCePTPenJ7Zhr1E6/.GdnbRn.u")
+    @WithMockUser(username = "aimenjerbi@gmail.com", password = "$2a$10$1CqRTrB8yOLXVmAMXCHbAu08ameoCePTPenJ7Zhr1E6/.GdnbRn.u", authorities = "USER")
     void getUsertransactionShouldReturnOK() throws Exception {
         mvc.perform(get("/user/transfert")).andDo(print()).andExpect(status().isOk());
     }
-}
 
+//    @Test
+//    @WithMockUser(username = "aimenjerbi@gmail.com", password = "$2a$10$1CqRTrB8yOLXVmAMXCHbAu08ameoCePTPenJ7Zhr1E6/.GdnbRn.u", authorities = "USER")
+//    void postUsertransaction() throws Exception {
+//        mvc.perform(post("/user/transaction")
+//                        .param("userDestinationId", "46")
+//                        .param("amount", "100")
+//                        .param("comments", "velo")
+//                        .with(csrf())
+//                ).andDo(print())
+//                .andExpect(status().is3xxRedirection());
+
+//        User userTest = userservice.findByEmail("aimenjerbi@gmail.com");
+//        User userAnotherTest = userservice.findByEmail("gimme@gmail.com");
+//        assertEquals(new BigDecimal("900.00"), userTest.getBalance(), "1000 - user transaction");
+//        assertEquals(new BigDecimal("1099.50"), userAnotherTest.getBalance(), "1000 + user transaction - fees (0.5%)");
+//
+//        UserTransaction userTransaction = userTest.getUserTransactions().iterator().next();
+//        assertEquals(userTest, userTransaction.getUserSource());
+//        assertEquals(userAnotherTest, userTransaction.getUserDestination());
+//        assertEquals(new BigDecimal("99.50"), userTransaction.getAmount());
+//
+//        assertEquals(new BigDecimal("0.50"), userTransaction.getFees());
+
+//}
+
+}

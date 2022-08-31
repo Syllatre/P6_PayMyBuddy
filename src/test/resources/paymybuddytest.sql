@@ -1,11 +1,11 @@
 
-CREATE SCHEMA IF NOT EXISTS `paymybuddy_test` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
-USE `paymybuddy_test` ;
+CREATE SCHEMA IF NOT EXISTS `paymybuddytest` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+USE `paymybuddytest` ;
 
 -- -----------------------------------------------------
--- Table `paymybuddy_test`.`persistent_logins`
+-- Table `paymybuddytest`.`persistent_logins`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `paymybuddy_test`.`persistent_logins` (
+CREATE TABLE IF NOT EXISTS `paymybuddytest`.`persistent_logins` (
   `username` VARCHAR(64) NOT NULL,
   `series` VARCHAR(64) NOT NULL,
   `token` VARCHAR(64) NOT NULL,
@@ -19,9 +19,9 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `paymybuddy_test`.`user`
+-- Table `paymybuddytest`.`user`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `paymybuddy_test`.`user` (
+CREATE TABLE IF NOT EXISTS `paymybuddytest`.`user` (
   `user_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `firstname` VARCHAR(50) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_0900_ai_ci' NOT NULL,
   `lastname` VARCHAR(50) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_0900_ai_ci' NOT NULL,
@@ -42,9 +42,9 @@ INSERT IGNORE INTO `user` (`user_id`,`firstname`, `lastname`, `username`, `email
 (46,'nicolas', 'lietard','gimme', 'gimme@gmail.com', 0.00, 1, '$2a$10$1CqRTrB8yOLXVmAMXCHbAu08ameoCePTPenJ7Zhr1E6/.GdnbRn.u');
 
 -- -----------------------------------------------------
--- Table `paymybuddy_test`.`role`
+-- Table `paymybuddytest`.`role`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `paymybuddy_test`.`role` (
+CREATE TABLE IF NOT EXISTS `paymybuddytest`.`role` (
   `role_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `role` VARCHAR(50) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_0900_ai_ci' NOT NULL,
   PRIMARY KEY (`role_id`))
@@ -57,9 +57,9 @@ INSERT IGNORE INTO `role` (`role`) VALUES
 	('ADMIN');
 
 -- -----------------------------------------------------
--- Table `paymybuddy_test`.`transactions_bank`
+-- Table `paymybuddytest`.`transactions_bank`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `paymybuddy_test`.`transactions_bank` (
+CREATE TABLE IF NOT EXISTS `paymybuddytest`.`transactions_bank` (
   `bank_transaction_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `datetime` DATETIME NOT NULL,
   `amount` INT NOT NULL,
@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS `paymybuddy_test`.`transactions_bank` (
   INDEX `fk_transactions_bank_user_idx` (`user_id` ASC),
   CONSTRAINT `fk_transactions_bank_user`
     FOREIGN KEY (`user_id`)
-    REFERENCES `paymybuddy_test`.`user` (`user_id`)
+    REFERENCES `paymybuddytest`.`user` (`user_id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
@@ -79,9 +79,9 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 -- -----------------------------------------------------
 
--- Table `paymybuddy_test`.`user_connection`
+-- Table `paymybuddytest`.`user_connection`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `paymybuddy_test`.`user_connection` (
+CREATE TABLE IF NOT EXISTS `paymybuddytest`.`user_connection` (
   `user_source_id` INT UNSIGNED NOT NULL,
   `user_destination_id` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`user_source_id`, `user_destination_id`),
@@ -89,12 +89,12 @@ CREATE TABLE IF NOT EXISTS `paymybuddy_test`.`user_connection` (
   INDEX `fk_user_connection_user_destination_id_idx` USING BTREE (`user_destination_id`),
   CONSTRAINT `fk_user_connection_user_destination_id`
     FOREIGN KEY (`user_destination_id`)
-    REFERENCES `paymybuddy_test`.`user` (`user_id`)
+    REFERENCES `paymybuddytest`.`user` (`user_id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_user_connection_user_source_id`
     FOREIGN KEY (`user_source_id`)
-    REFERENCES `paymybuddy_test`.`user` (`user_id`)
+    REFERENCES `paymybuddytest`.`user` (`user_id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
@@ -107,9 +107,9 @@ INSERT INTO `user_connection` (`user_source_id`, `user_destination_id`) VALUES
 
 
 -- -----------------------------------------------------
--- Table `paymybuddy_test`.`user_roles`
+-- Table `paymybuddytest`.`user_roles`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `paymybuddy_test`.`user_roles` (
+CREATE TABLE IF NOT EXISTS `paymybuddytest`.`user_roles` (
   `user_id` INT UNSIGNED NOT NULL,
   `role_id` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`user_id`, `role_id`),
@@ -117,12 +117,12 @@ CREATE TABLE IF NOT EXISTS `paymybuddy_test`.`user_roles` (
   INDEX `fk_user_roles_role_id` USING BTREE (`role_id`),
   CONSTRAINT `fk_user_roles_role`
     FOREIGN KEY (`role_id`)
-    REFERENCES `paymybuddy_test`.`role` (`role_id`)
+    REFERENCES `paymybuddytest`.`role` (`role_id`)
     ON DELETE RESTRICT
     ON UPDATE RESTRICT,
   CONSTRAINT `fk_user_roles_user`
     FOREIGN KEY (`user_id`)
-    REFERENCES `paymybuddy_test`.`user` (`user_id`)
+    REFERENCES `paymybuddytest`.`user` (`user_id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
@@ -133,9 +133,9 @@ INSERT IGNORE INTO `user_roles` (`user_id`, `role_id`) VALUES
 (45, 1), (46,1);
 
 -- -----------------------------------------------------
--- Table `paymybuddy_test`.`user_transaction`
+-- Table `paymybuddytest`.`user_transaction`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `paymybuddy_test`.`user_transaction` (
+CREATE TABLE IF NOT EXISTS `paymybuddytest`.`user_transaction` (
   `user_transaction_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `user_destination_id` INT UNSIGNED NOT NULL,
   `user_source_id` INT UNSIGNED NOT NULL,
@@ -148,12 +148,12 @@ CREATE TABLE IF NOT EXISTS `paymybuddy_test`.`user_transaction` (
   INDEX `fk_tu_user_source_id` USING BTREE (`user_source_id`),
   CONSTRAINT `fk_user_transaction_user_destination_id`
     FOREIGN KEY (`user_destination_id`)
-    REFERENCES `paymybuddy_test`.`user` (`user_id`)
+    REFERENCES `paymybuddytest`.`user` (`user_id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_user_transaction_user_source_id`
     FOREIGN KEY (`user_source_id`)
-    REFERENCES `paymybuddy_test`.`user` (`user_id`)
+    REFERENCES `paymybuddytest`.`user` (`user_id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB

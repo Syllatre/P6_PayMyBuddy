@@ -37,9 +37,9 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
-INSERT IGNORE INTO `user` (`user_id`,`firstname`, `lastname`, `username`, `email`, `balance`, `active`, `password`) VALUES
-(45,'aimen', 'jerbi','akira', 'aimenjerbi@gmail.com', 0.00, 1, '$2a$10$1CqRTrB8yOLXVmAMXCHbAu08ameoCePTPenJ7Zhr1E6/.GdnbRn.u'),
-(46,'nicolas', 'lietard','gimme', 'gimme@gmail.com', 0.00, 1, '$2a$10$1CqRTrB8yOLXVmAMXCHbAu08ameoCePTPenJ7Zhr1E6/.GdnbRn.u');
+INSERT IGNORE INTO `user` (`firstname`, `lastname`, `username`, `email`, `balance`, `active`, `password`) VALUES
+('aimen', 'jerbi','akira', 'aimenjerbi@gmail.com', 0.00, 1, '$2a$10$1CqRTrB8yOLXVmAMXCHbAu08ameoCePTPenJ7Zhr1E6/.GdnbRn.u'),
+('nicolas', 'lietard','gimme', 'gimme@gmail.com', 0.00, 1, '$2a$10$1CqRTrB8yOLXVmAMXCHbAu08ameoCePTPenJ7Zhr1E6/.GdnbRn.u');
 
 -- -----------------------------------------------------
 -- Table `paymybuddy`.`role`
@@ -127,7 +127,7 @@ DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
 INSERT IGNORE INTO `user_roles` (`user_id`, `role_id`) VALUES
-(45, 1), (46,1);
+(1, 1), (2,1);
 
 -- -----------------------------------------------------
 -- Table `paymybuddy`.`user_transaction`
