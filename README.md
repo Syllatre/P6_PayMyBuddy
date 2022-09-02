@@ -22,7 +22,7 @@ Objectif à réaliser :
 * Java 11
 * mySQL - créer une base de donnée "paymybuddy" et "paymybuddytest"
 * Pour accéder à l'application rendez-vous sur l'url http://localhost:8080
-* Vous pouvez directement acceder à l'application aves l' ```sh identifiant : 
-aimenjerbi@gmail.com``` et ```sh mot de passe : 1234 ```
+* Vous pouvez directement acceder à l'application aves l' ``` identifiant : 
+aimenjerbi@gmail.com``` et ``` mot de passe : 1234 ```
 
 
