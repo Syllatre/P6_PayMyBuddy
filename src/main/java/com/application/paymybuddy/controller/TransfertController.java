@@ -66,6 +66,9 @@ public class TransfertController {
         User user = userService.getCurrentUser();
         model.addAttribute("user", user);
 
+        if (bindingResult.hasErrors()) {
+            return "transfert";
+        }
 
         if (!user.getConnections().contains(userDestination)) {
             log.debug("Failure: unknown buddy");
@@ -79,9 +82,7 @@ public class TransfertController {
             bindingResult.rejectValue("amount", "insufficientBalance", "Votre solde est insuffisant");
             return "transfert";
         }
-        if (bindingResult.hasErrors()) {
-            return "transfert";
-        }
+
 
         UserTransaction userTransaction = convertToEntity(userTransactionDTO, userDestination);
 

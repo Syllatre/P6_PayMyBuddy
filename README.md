@@ -25,4 +25,9 @@ Objectif à réaliser :
 * Vous pouvez directement acceder à l'application aves l' ``` identifiant : 
 aimenjerbi@gmail.com``` et ``` mot de passe : 1234 ```
 
+# Lancer les tests
+
+*``` mvn test ``` pour les tests unitaires
+*``` mvn verify ``` pour les tests d'intégrations
+
 

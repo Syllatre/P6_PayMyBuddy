@@ -17,8 +17,9 @@ public class UserTransactionDTO implements Serializable {
     @NotNull
     private Long userDestinationId;
 
-    @Positive(message = "veuillez saisir un nombre positif")
     @NotNull
+    @Positive(message = "veuillez saisir un nombre positif")
+
     private BigDecimal amount;
 
     @NotBlank

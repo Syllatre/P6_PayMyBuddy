@@ -129,7 +129,7 @@ public class TransfertControllerTest {
 
     @WithUserDetails("aimenjerbi@gmail.com")
     @Test
-    void PostTransfert_ErrorWithAmountNull() throws Exception {
+    void PostTransfert_ErrorWithCommentsNull() throws Exception {
         user1.getConnections().add(user3);
         BigDecimal transactionAmount = new BigDecimal("33");
         Long userDestinationId = 3L;
@@ -143,7 +143,7 @@ public class TransfertControllerTest {
         mockMvc.perform(post("/user/transfert")
                         .param("userDestinationId", userDestinationId.toString())
                         .param("amount", transactionAmount.toString())
-                        .param("comment", "")
+                        .param("comments", "")
                         .with(csrf()))
                         .andExpect((model().errorCount(1)))
                         .andExpect(status().isOk());
@@ -165,9 +165,9 @@ public class TransfertControllerTest {
         mockMvc.perform(post("/user/transfert")
                         .param("userDestinationId", userDestinationId.toString())
                         .param("amount", transactionAmount.toString())
-                        .param("comment", "velo")
+                        .param("comments", "velo")
                         .with(csrf()))
-                .andExpect((model().errorCount(2)))
+                .andExpect((model().errorCount(1)))
                 .andExpect(model().attributeHasFieldErrorCode("userTransactionDTO", "userDestinationId", "userDestinationNotABuddy"));
     }
 
@@ -188,9 +188,9 @@ public class TransfertControllerTest {
         mockMvc.perform(post("/user/transfert")
                         .param("userDestinationId", userDestinationId.toString())
                         .param("amount", transactionAmount.toString())
-                        .param("comment", "velo")
+                        .param("comments", "velo")
                         .with(csrf()))
-                .andExpect((model().errorCount(2)))
+                .andExpect((model().errorCount(1)))
                 .andExpect(model().attributeHasFieldErrorCode("userTransactionDTO", "amount", "insufficientBalance"));
     }
 

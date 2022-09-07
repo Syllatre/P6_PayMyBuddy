@@ -2,6 +2,7 @@ package com.application.paymybuddy.Controller.IT;
 
 
 import com.application.paymybuddy.model.User;
+import com.application.paymybuddy.model.UserTransaction;
 import com.application.paymybuddy.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,8 +16,13 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -32,15 +38,16 @@ class TransfertControllerIT {
     @Autowired
     private UserService userservice;
 
+    User userTest;
+    User userAnotherTest;
     @BeforeEach
     void initializeDatabaseValues() {
-        User userTest = userservice.findByEmail("aimenjerbi@gmail.com");
+        userTest = userservice.findByEmail("aimenjerbi@gmail.com");
         userTest.setBalance(new BigDecimal("1000"));
-        userservice.save(userTest);
-
-        User userAnotherTest = userservice.findByEmail("gimme@gmail.com");
+        userAnotherTest = userservice.findByEmail("gimme@gmail.com");
         userAnotherTest.setBalance(new BigDecimal("1000"));
         userservice.save(userAnotherTest);
+        userservice.save(userTest);
     }
 
     @Test
@@ -51,17 +58,19 @@ class TransfertControllerIT {
 
 //    @Test
 //    @WithMockUser(username = "aimenjerbi@gmail.com", password = "$2a$10$1CqRTrB8yOLXVmAMXCHbAu08ameoCePTPenJ7Zhr1E6/.GdnbRn.u", authorities = "USER")
-//    void postUsertransaction() throws Exception {
-//        mvc.perform(post("/user/transaction")
+//    void postTransfertShouldBeOk() throws Exception {
+//        mvc.perform(post("/user/transfert")
 //                        .param("userDestinationId", "46")
 //                        .param("amount", "100")
 //                        .param("comments", "velo")
 //                        .with(csrf())
 //                ).andDo(print())
 //                .andExpect(status().is3xxRedirection());
-
-//        User userTest = userservice.findByEmail("aimenjerbi@gmail.com");
-//        User userAnotherTest = userservice.findByEmail("gimme@gmail.com");
+//
+//        Set<User> connection = new HashSet<>();
+//        connection.add(userAnotherTest);
+//        userTest.setConnections(connection);
+//        userservice.save(userTest);
 //        assertEquals(new BigDecimal("900.00"), userTest.getBalance(), "1000 - user transaction");
 //        assertEquals(new BigDecimal("1099.50"), userAnotherTest.getBalance(), "1000 + user transaction - fees (0.5%)");
 //
@@ -71,7 +80,6 @@ class TransfertControllerIT {
 //        assertEquals(new BigDecimal("99.50"), userTransaction.getAmount());
 //
 //        assertEquals(new BigDecimal("0.50"), userTransaction.getFees());
-
+//
 //}
-
 }

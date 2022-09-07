@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -38,7 +39,7 @@ public class UserTransaction {
     @Column(name = "comments", length = 200)
     private String comments;
 
-
+    @NotNull
     @Column(name = "amount")
     private BigDecimal amount;
 

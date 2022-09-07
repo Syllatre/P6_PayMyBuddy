@@ -129,7 +129,7 @@
 							<archive>
 								<manifest>
 									<mainClass>
-										com.application.safetynet.SafetynetApplication
+										com.application.paymybuddy.PayMyBuddyApplication
 									</mainClass>
 								</manifest>
 							</archive>

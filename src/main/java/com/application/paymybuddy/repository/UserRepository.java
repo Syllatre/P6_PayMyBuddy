@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
@@ -16,6 +18,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     public User findByEmail(String email);
 
+    public Optional <User> findById(Long id);
     @Query("SELECT CASE "
             + "WHEN COUNT(u) > 0 THEN true"
             + " ELSE false END "
